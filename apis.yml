@@ -7,6 +7,7 @@ description: The Cisco Product Security Incident Response Team (PSIRT) openVuln 
   published in the CiscoPSIRT GitHub organization.
 url: https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/apis.yml
 type: Index
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cisco.png
 access: 3rd-Party
 position: Consumer
 x-type: company
@@ -26,25 +27,145 @@ tags:
 - Disclosure
 - Compliance
 - Networking
-apis: []
+apis:
+- aid: cisco-psirt:cisco-psirt-current-endpoints-api
+  name: Cisco PSIRT openVuln API Current Endpoints API
+  description: Current supported API endpoints.
+  tags:
+  - Current Endpoints
+  humanURL: https://developer.cisco.com/docs/psirt/
+  baseURL: https://apix.cisco.com/security/advisories/v2
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-psirt-current-endpoints-api-openapi.yml
+  - type: Overlay
+    url: overlays/cisco-psirt-current-endpoints-api-overlay.yaml
+- aid: cisco-psirt:cisco-psirt-obsolete-endpoints-api
+  name: Cisco PSIRT openVuln API Obsolete Endpoints API
+  description: These API endpoints are no longer available.  Migrate to current version calls.
+  tags:
+  - Obsolete Endpoints
+  humanURL: https://developer.cisco.com/docs/psirt/
+  baseURL: https://apix.cisco.com/security/advisories
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+  - type: Overlay
+    url: overlays/cisco-psirt-obsolete-endpoints-api-overlay.yaml
+- aid: cisco-psirt:cisco-psirt-sunset-endpoints-api
+  name: Cisco PSIRT openVuln API Sunset Endpoints API
+  description: The "security/advisories" basepath will be deprecated in the future. These API endpoints have changed
+    with the introduction of v2 basepath.  Migrate the below endpoints to current endpoint calls. The below endpoints
+    only work with "security/advisories" basepath.
+  tags:
+  - Sunset Endpoints
+  humanURL: https://developer.cisco.com/docs/psirt/
+  baseURL: https://apix.cisco.com/security/advisories
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+  - type: Overlay
+    url: overlays/cisco-psirt-sunset-endpoints-api-overlay.yaml
 common:
+- type: AgenticAccess
+  url: agentic-access/cisco-psirt-agentic-access.yml
+- type: DomainSecurity
+  url: security/cisco-psirt-domain-security.yml
+- type: Authentication
+  url: authentication/cisco-psirt-authentication.yml
+- type: ParentCompany
+  url: https://apis.io/providers/cisco/
+  name: Cisco
+  x-relationship: product
+  x-generated-by: cisco-family:2026-08-19
 - type: Portal
   url: https://developer.cisco.com/psirt/
 - type: Documentation
   url: https://developer.cisco.com/docs/psirt/
 - type: APIReference
   url: https://developer.cisco.com/psirt/
-- type: ParentCompany
-  url: https://apis.io/providers/cisco/
-  name: Cisco
 - type: OpenAPI Source
   url: https://github.com/CiscoPSIRT/openVulnAPI
 - type: GitHubOrganization
   url: https://github.com/CiscoPSIRT
 - type: Portal
   url: https://developer.cisco.com/
+- type: Packages
+  url: packages/cisco-psirt-packages.yml
+- type: SDKs
+  url: packages/cisco-psirt-packages.yml
+  x-note: openVulnQuery (Python) — Cisco-published
+- type: CLI
+  url: cli/cisco-psirt-cli.yml
+- type: WellKnown
+  url: well-known/cisco-psirt-well-known.yml
+- type: SecurityTxt
+  url: well-known/cisco-psirt-security.txt
+- type: Security
+  url: https://sec.cloudapps.cisco.com/security/center/resources/security_vulnerability_policy.html
+  x-note: Cisco Security Vulnerability Policy
+- type: VulnerabilityDisclosure
+  url: security/cisco-psirt-vulnerability-disclosure.yml
+- type: TrustCenter
+  url: security/cisco-psirt-trust-center.yml
+- type: Compliance
+  url: https://trustportal.cisco.com/c/r/ctp/home.html
+  x-note: Cisco Trust Portal — SOC 2, ISO 27001, FedRAMP, C5, GDPR
+- type: Conformance
+  url: conformance/cisco-psirt-conformance.yml
+- type: Lifecycle
+  url: lifecycle/cisco-psirt-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/cisco-psirt-lifecycle.yml
+  x-note: >-
+    Deprecation is encoded in the OpenAPI itself — deprecated:true plus a 410 Gone
+    response on all 10 /cvrf/* operations, and a Sunset Endpoints tag carrying the
+    migration instruction. No standalone deprecation-policy page is published.
+- type: RateLimits
+  url: rate-limits/cisco-psirt-rate-limits.yml
+- type: Plans
+  url: plans/cisco-psirt-plans-pricing.yml
+- type: Conventions
+  url: conventions/cisco-psirt-conventions.yml
+- type: ErrorCatalog
+  url: errors/cisco-psirt-problem-types.yml
+- type: ErrorCodes
+  url: errors/cisco-psirt-error-codes.yml
+- type: DataModel
+  url: data-model/cisco-psirt-data-model.yml
+- type: OAuthScopes
+  url: scopes/cisco-psirt-scopes.yml
+- type: LLMsTxt
+  url: llms/cisco-psirt-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: ToolCrosswalk
+  url: mcp/cisco-psirt-tool-crosswalk.yml
+- type: GettingStarted
+  url: https://developer.cisco.com/docs/psirt/getting-started/
+- type: Authentication
+  url: https://developer.cisco.com/docs/psirt/authentication/
+- type: FAQ
+  url: https://developer.cisco.com/docs/psirt/faq/
+- type: Support
+  url: https://developer.cisco.com/site/support/
+- type: Blog
+  url: https://blogs.cisco.com/tag/psirt
+- type: SignUp
+  url: https://apiconsole.cisco.com/
+  x-note: Register an application to obtain client credentials
+- type: TermsOfService
+  url: https://github.com/CiscoPSIRT/openVulnAPI/blob/master/LICENSE.md
+  x-note: The termsOfService the Cisco OpenAPI itself names
+- type: PrivacyPolicy
+  url: https://www.cisco.com/c/en/us/about/legal/privacy-full.html
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+x-enrichment:
+  date: '2026-08-19'
+  status: enriched
+  artifacts_added: 30
+  pass: local-v1
