@@ -1,0 +1,50 @@
+aid: cisco-psirt
+name: Cisco PSIRT openVuln API
+description: The Cisco Product Security Incident Response Team (PSIRT) openVuln API is Cisco's machine-readable
+  vulnerability disclosure service. It lets security teams query Cisco security advisories by CVE, advisory ID,
+  severity, publication date, affected product or specific IOS/IOS-XE release, and returns CVRF and OVAL content
+  alongside JSON. It is one of the few Cisco surfaces with a genuinely public, fetchable OpenAPI 3.0.3 document,
+  published in the CiscoPSIRT GitHub organization.
+url: https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/apis.yml
+type: Index
+access: 3rd-Party
+position: Consumer
+x-type: company
+x-source: cisco-family-buildout:2026-08-19
+x-parent: cisco
+x-relationship: product
+x-contract-status: real
+x-contract-note: Cisco publishes a fetchable first-party specification for this API. Harvested into openapi/_original/
+  with an x-provenance stamp.
+specificationVersion: '0.23'
+created: '2026-08-19'
+modified: '2026-08-19'
+tags:
+- Security
+- Vulnerability Management
+- Threat Intelligence
+- Disclosure
+- Compliance
+- Networking
+apis: []
+common:
+- type: Portal
+  url: https://developer.cisco.com/psirt/
+- type: Documentation
+  url: https://developer.cisco.com/docs/psirt/
+- type: APIReference
+  url: https://developer.cisco.com/psirt/
+- type: ParentCompany
+  url: https://apis.io/providers/cisco/
+  name: Cisco
+- type: OpenAPI Source
+  url: https://github.com/CiscoPSIRT/openVulnAPI
+- type: GitHubOrganization
+  url: https://github.com/CiscoPSIRT
+- type: Portal
+  url: https://developer.cisco.com/
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
+- FN: APIs.json
+  email: info@apis.io
