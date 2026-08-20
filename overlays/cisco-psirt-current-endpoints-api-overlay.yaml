@@ -1,0 +1,84 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Cisco PSIRT openVuln API (current endpoints api)
+  version: 1.0.0
+extends: openapi/cisco-psirt-current-endpoints-api-openapi.yml
+x-generated: '2026-08-19'
+x-method: generated
+x-source: Derived from openapi/cisco-psirt-current-endpoints-api-openapi.yml. Proposes an operationId for every
+  operation Cisco left unnamed, and links the derived API Evangelist artifacts.
+x-operation-ids-proposed: 15
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/providers/cisco-psirt/
+    x-apievangelist-artifacts:
+      authentication: authentication/cisco-psirt-authentication.yml
+      conventions: conventions/cisco-psirt-conventions.yml
+      errors: errors/cisco-psirt-problem-types.yml
+      error_codes: errors/cisco-psirt-error-codes.yml
+      lifecycle: lifecycle/cisco-psirt-lifecycle.yml
+      rate_limits: rate-limits/cisco-psirt-rate-limits.yml
+      data_model: data-model/cisco-psirt-data-model.yml
+      scopes: scopes/cisco-psirt-scopes.yml
+    x-apievangelist-note: Enhancements only. The Cisco-published contract is unmodified; apply this overlay to add
+      them.
+- target: $.paths['/all'].get
+  update:
+    operationId: getAll
+    summary: Used to obtain information about all published security advisories
+- target: $.paths['/all/firstpublished'].get
+  update:
+    operationId: getAllFirstpublished
+    summary: Used to obtain information about all published security advisories first published within a date timeframe
+- target: $.paths['/all/lastpublished'].get
+  update:
+    operationId: getAllLastpublished
+    summary: Used to obtain information about all published security advisories last published within a date timeframe
+- target: $.paths['/advisory/{advisoryId}'].get
+  update:
+    operationId: getAdvisoryByAdvisoryid
+    summary: Used to obtain an advisory given its advisory ID `advisoryId` (i.e., cisco-sa-20180221-ucdm)
+- target: $.paths['/cve/{cve_id}'].get
+  update:
+    operationId: getCveByCveId
+    summary: Used to obtain an advisory using a given Common Vulnerability Enumerator (CVE)
+- target: $.paths['/bugid/{bug_id}'].get
+  update:
+    operationId: getBugidByBugId
+    summary: 'Used to obtain an advisory using a given bug_id '
+- target: $.paths['/latest/{number}'].get
+  update:
+    operationId: getLatestByNumber
+    summary: Used to obtain all the latest security advisories given an absolute number
+- target: $.paths['/severity/{severity}'].get
+  update:
+    operationId: getSeverityBySeverity
+    summary: Used to obtain all security advisories for a given security impact rating (critical, high, medium,
+      low or informational)
+- target: $.paths['/severity/{severity}/firstpublished'].get
+  update:
+    operationId: getSeverityBySeverityFirstpublished
+- target: $.paths['/severity/{severity}/lastpublished'].get
+  update:
+    operationId: getSeverityBySeverityLastpublished
+- target: $.paths['/product'].get
+  update:
+    operationId: getProduct
+    summary: Used to obtain all the advisories that affects the given product name
+- target: $.paths['/year/{year}'].get
+  update:
+    operationId: getYearByYear
+    summary: Used to obtain all security advisories that have were originally published in a specific year `YYYY`
+- target: $.paths['/OSType/{OSType}'].get
+  update:
+    operationId: getOstypeByOstype
+    summary: Used to obtain all advisories that affects the given network operating system version
+- target: $.paths['/OS_version/OS_data'].get
+  update:
+    operationId: getOsVersionOsData
+    summary: To obtain version information regarding the different Network Operating Systems
+- target: $.paths['/platforms'].get
+  update:
+    operationId: getPlatforms
+    summary: To obtain the platform types for the networking operating system

@@ -1,0 +1,94 @@
+# Cisco PSIRT openVuln API
+
+> Cisco's machine-readable security-vulnerability disclosure API. Query Cisco
+> security advisories by CVE, advisory id, Cisco Bug ID, severity, product,
+> publication date range, or a specific IOS / IOS XE / NX-OS / ASA / FTD / FMC /
+> FXOS software release, and receive JSON or XML plus links to the full CSAF and
+> CVRF documents. Operated by the Cisco Product Security Incident Response Team.
+> Read-only: all 30 published operations are GET.
+
+Access: OAuth 2.0 client credentials. Register an application at the Cisco API
+Console (https://apiconsole.cisco.com/) with a Cisco.com ID, select the "Cisco
+PSIRT openVuln API", grant type Client Credentials, then exchange the resulting
+key + secret for a Bearer JWT at https://id.cisco.com/oauth2/default/v1/token
+(expires_in 3600). Cisco states the API is "open to registered Cisco customers and
+partners". No price is published and there are no plans or tiers.
+
+Base URL: https://apix.cisco.com/security/advisories/v2
+Legacy base (applications registered before 1 March 2023):
+https://api.cisco.com/security/advisories/v2
+
+Quota: 5 calls/second, 30 calls/minute, 5000 calls/day per registered application.
+No RateLimit-* response headers and no documented 429 — an agent must do its own
+accounting. Cisco's guidance is to cache locally.
+
+## APIs
+
+- [Current Endpoints](https://developer.cisco.com/docs/psirt/): 15 supported GET
+  operations — /all, /advisory/{advisoryId}, /cve/{cve_id}, /bugid/{bug_id},
+  /latest/{number}, /severity/{severity}, /product, /year/{year}, /platforms,
+  /OSType/{OSType}, /OS_version/OS_data and the date-range variants.
+- [Sunset Endpoints](https://developer.cisco.com/docs/psirt/): 5 operations that
+  only work against the legacy "security/advisories" basepath — /ios, /iosxe,
+  /aci, /nxos, /nos_version/nos_data. Migrate to the current endpoints.
+- [Obsolete Endpoints](https://developer.cisco.com/docs/psirt/): 10 /cvrf/*
+  operations, all marked deprecated and returning 410 Gone. Do not call them.
+
+## Specs
+
+- [OpenAPI 3.0.3, Cisco-published](https://raw.githubusercontent.com/CiscoPSIRT/openVulnAPI/master/swagger/openVulnAPIOAS_3_0_3.yaml)
+- [Swagger 2.0, Cisco-published](https://raw.githubusercontent.com/CiscoPSIRT/openVulnAPI/master/swagger/openVulnAPISwagger_0_0_5.yaml)
+- [Current endpoints, refined](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/openapi/cisco-psirt-current-endpoints-api-openapi.yml)
+- [Sunset endpoints, refined](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/openapi/cisco-psirt-sunset-endpoints-api-openapi.yml)
+- [Obsolete endpoints, refined](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml)
+- [CSAF provider metadata](https://www.cisco.com/.well-known/csaf/provider-metadata.json): Cisco is a
+  csaf_trusted_provider; the bulk advisory corpus is at https://www.cisco.com/.well-known/csaf/
+
+## Docs
+
+- [Developer portal](https://developer.cisco.com/psirt/)
+- [Documentation](https://developer.cisco.com/docs/psirt/)
+- [Getting started](https://developer.cisco.com/docs/psirt/getting-started/)
+- [Authentication](https://developer.cisco.com/docs/psirt/authentication/)
+- [FAQ](https://developer.cisco.com/docs/psirt/faq/)
+- [Error codes](https://github.com/CiscoPSIRT/openVulnAPI/blob/master/error_codes.md)
+- [API console / key management](https://apiconsole.cisco.com/)
+- [Cisco Security Center resource page](https://sec.cloudapps.cisco.com/security/center/resources/openvulnapi)
+
+## Clients
+
+- [openVulnQuery (Python module + CLI)](https://github.com/CiscoPSIRT/openVulnQuery) —
+  pip3 install openVulnQuery. Published from Cisco's own CiscoPSIRT org but labelled
+  "community-supported"; last PyPI release 1.34 on 2023-08-06.
+- [Example code (Go, JavaScript, PHP, Ruby, curl)](https://github.com/CiscoPSIRT/openVulnAPI/tree/master/example_code) —
+  sample code only, never published to a package registry.
+
+## Artifacts
+
+- [Authentication profile](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/authentication/cisco-psirt-authentication.yml)
+- [API conventions](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/conventions/cisco-psirt-conventions.yml)
+- [Error catalog](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/errors/cisco-psirt-problem-types.yml)
+- [Error-code registry](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/errors/cisco-psirt-error-codes.yml)
+- [Rate limits](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/rate-limits/cisco-psirt-rate-limits.yml)
+- [Lifecycle and deprecation](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/lifecycle/cisco-psirt-lifecycle.yml)
+- [Data model](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/data-model/cisco-psirt-data-model.yml)
+- [Conformance](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/conformance/cisco-psirt-conformance.yml)
+- [Well-known index](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/well-known/cisco-psirt-well-known.yml)
+- [Agent skills](https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/skills/_index.yml)
+
+## Notes for agents
+
+- An empty result set is returned as HTTP 404 with errorCode NO_DATA_FOUND. That is
+  a successful "nothing matched" answer, not a failure. Do not retry it.
+- Branch on errorCode, never on HTTP status alone: a 404 on this API means any of
+  six different things, and Cisco's own OpenAPI documents one of them as a bug.
+- Format is chosen by URL extension (.json / .xml), not by the Accept header.
+- Pagination is pageIndex/pageSize, both capped at 100, and no response field or
+  Link header tells you whether more pages exist. The reachable ceiling is 10,000
+  records per query — narrow by year or severity.
+- Multi-valued fields (cves, bugIDs, cwe, productNames) are typed "string" in the
+  spec but carry comma-joined lists on the wire.
+- There is no webhook or event surface. Poll /all/lastpublished with a date range,
+  or take the bulk CSAF corpus.
+- No MCP server is published by Cisco. Community servers exist but are local-stdio
+  only and cover 5 of the 15 current operations.

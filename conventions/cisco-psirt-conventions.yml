@@ -1,0 +1,188 @@
+generated: '2026-08-19'
+method: searched
+source: >-
+  https://developer.cisco.com/docs/psirt/ (Introduction, Authentication, Getting
+  Started, FAQ) plus the Cisco-published OpenAPI 3.0.3 at
+  https://github.com/CiscoPSIRT/openVulnAPI/blob/master/swagger/openVulnAPIOAS_3_0_3.yaml
+description: >-
+  Cross-cutting request/response semantics for the Cisco PSIRT openVuln API — the
+  behaviour that holds across all 30 operations and that OpenAPI does not fully
+  express. The shape of this API is unusual in a way that matters to an agent: it
+  is 100% read-only (every operation is a GET), it content-negotiates by URL
+  EXTENSION rather than by Accept header, it returns 404 for an empty result set,
+  and it carries no request-id, no rate-limit headers and no idempotency key —
+  because with no writes there is nothing to make idempotent.
+base_url: https://apix.cisco.com/security/advisories/v2
+base_url_legacy: https://api.cisco.com/security/advisories/v2
+base_url_note: >-
+  api.cisco.com serves applications registered before 1 March 2023 (the spec's own
+  server description says it "expires Sep 30, 2023"); apix.cisco.com serves
+  applications registered after. The basePath is an OpenAPI server variable with
+  exactly two enum values: security/advisories (v1) and security/advisories/v2
+  (current default).
+api_style: REST over HTTPS, query-parameter filtering, JSON or XML responses
+gateway: Mashery (Server response header on both API hosts)
+read_only: true
+read_only_detail: >-
+  All 30 published operations are GET. There is no POST, PUT, PATCH or DELETE
+  anywhere in the contract. The API is a one-way disclosure feed.
+
+authentication:
+  scheme: OAuth 2.0 client credentials -> Bearer JWT
+  header: 'Authorization: Bearer <access_token>'
+  token_url: https://id.cisco.com/oauth2/default/v1/token
+  token_lifetime_seconds: 3600
+  transport: HTTPS only
+  detail: authentication/cisco-psirt-authentication.yml
+  docs: https://developer.cisco.com/docs/psirt/authentication/
+
+idempotency:
+  supported: not-applicable
+  mechanism: null
+  key_header: null
+  detail: >-
+    Cisco publishes NO idempotency contract — no Idempotency-Key header, no request
+    replay semantics, no retention window. It also does not need one at present:
+    every operation is a GET and is therefore idempotent by HTTP method semantics
+    (RFC 9110), so a retried request is inherently safe. This is recorded as
+    not-applicable rather than as support, because it is a property of the method
+    set and not something the provider designed or promises to preserve. No
+    Idempotency pointer is emitted in apis.yml on the strength of it.
+
+pagination:
+  style: page-index
+  request_params:
+    pageIndex:
+      type: integer
+      min: 1
+      max: 100
+      required: false
+      description: The current page index out of the total number of pages.
+      applies_to_operations: 21
+    pageSize:
+      type: integer
+      min: 1
+      max: 100
+      required: false
+      description: Maximum number of items requested by the client for the current page.
+      applies_to_operations: 21
+  response_fields: []
+  response_note: >-
+    THE GAP. Cisco accepts pageIndex and pageSize but the Advisories response schema
+    declares no total-count, page-count, next-cursor or Link header. A client cannot
+    tell from a response whether more pages exist — it must page until it receives a
+    404/NO_DATA_FOUND. Combined with the 5-calls-per-second quota, this makes bulk
+    retrieval genuinely awkward.
+  ceiling: 100 items per page, and pageIndex itself is capped at 100
+  ceiling_implication: >-
+    pageIndex max 100 x pageSize max 100 = a hard 10,000-record reachable ceiling
+    per query. Narrow by year or severity to stay under it.
+  errors: [INVALID_PAGEINDEX, MIN_PAGESIZE, MAX_PAGESIZE]
+
+content_negotiation:
+  mechanism: url-extension
+  detail: >-
+    Format is selected by appending .json or .xml to the resource URI, not by an
+    Accept header. An unsupported extension returns errorCode INVALID_EXTENSION —
+    which Cisco returns as a 404 on some operations and a 406 on others, and which
+    Cisco's own OpenAPI annotates as a known bug: "Currently this [is] incorrect. In
+    a minor update this will be moved to a 406 with the correct error message."
+  media_types: [application/json, application/xml]
+  default: application/json
+
+filtering:
+  common_query_params:
+    summaryDetails:
+      type: boolean
+      description: Include the advisory summary description in each record.
+      applies_to_operations: 27
+    productNames:
+      type: boolean
+      description: Include the productNames field in each record.
+      applies_to_operations: 27
+    advisoryId:
+      type: string
+      format: cisco-sa-XXX
+      description: Optional narrowing filter on 5 of the list operations.
+  date_range:
+    params: [startDate, endDate]
+    required_together: true
+    format: YYYY-MM-DD
+    pattern: '^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$'
+    applies_to_operations: 8
+    errors: [INVALID_DATE_FORMAT, START_DATE_GREATER, START_DATE_AND_END_DATE_MANDATORY]
+  identifier_formats:
+    advisoryId: cisco-sa-XXX (e.g. cisco-sa-20180221-ucdm)
+    cve_id: CVE-YYYY-NNNN
+    bug_id: CSCxyNNNNN
+    year: YYYY, 1995 to present
+    severity: critical | high | medium | low | informational
+
+field_expansion:
+  style: boolean-toggle
+  detail: >-
+    Not a general sparse-fieldset or expand mechanism. Two booleans
+    (summaryDetails, productNames) switch two expensive fields on or off. Field
+    projection is done client-side; Cisco's own openVulnQuery CLI implements
+    -f/--fields locally, not as an API parameter.
+
+timestamps:
+  timezone: UTC
+  statement: '"All dates returned are in UTC format." (https://developer.cisco.com/docs/psirt/)'
+  fields: [firstPublished, lastUpdated]
+  format: ISO 8601 without an offset suffix, e.g. 2022-04-29T04:28:53
+
+request_tracing:
+  request_id_header: null
+  detail: >-
+    No request-id or correlation-id header is documented or declared. The only
+    client-controlled identification is the User-Agent, which Cisco's own CLI
+    exposes as --user-agent (default "TestApp"). An agent should set a meaningful
+    User-Agent, because it is the only handle Cisco support has on your traffic.
+
+versioning:
+  scheme: uri-path-basepath
+  current: security/advisories/v2
+  spec_version: 2.0.2
+  header: null
+  detail: lifecycle/cisco-psirt-lifecycle.yml
+
+error_envelope:
+  format: bespoke
+  shape: '{errorCode, errorMessage}'
+  rfc9457: false
+  branch_on: errorCode
+  empty_result_is_404: true
+  empty_result_note: >-
+    An empty result set is returned as 404 with NO_DATA_FOUND, not 200 with an
+    empty array. Agents must special-case this or they will log false failures.
+  detail: errors/cisco-psirt-problem-types.yml
+  registry: errors/cisco-psirt-error-codes.yml
+
+rate_limit_signaling:
+  headers: []
+  status_on_exhaustion: null
+  published_quota: 5/sec, 30/min, 5000/day per registered application
+  detail: >-
+    Numbers are published; the runtime signal is not. No RateLimit-* or
+    X-RateLimit-* headers, no documented 429, no Retry-After. An agent must do its
+    own token-bucket accounting. Cisco's own guidance is to cache locally.
+  reference: rate-limits/cisco-psirt-rate-limits.yml
+
+caching:
+  provider_guidance: >-
+    "We recommend following best practices for rate-limiting and using local
+    caching of data to prevent multiple repeated calls to the Cisco PSIRT OpenVuln
+    API." (https://developer.cisco.com/docs/psirt/faq/)
+  cache_headers_documented: false
+  bulk_alternative: >-
+    For whole-corpus work, prefer the CSAF distribution directory at
+    https://www.cisco.com/.well-known/csaf/ over paging the API — it is the same
+    advisory content, unrated and unmetered.
+
+webhooks:
+  supported: false
+  detail: >-
+    No webhook, event or streaming surface exists. Change notification is a human
+    mailing list (openvuln-announce-join@cisco.com). Polling /all/lastpublished
+    with a date range is the only programmatic freshness mechanism.

@@ -1,0 +1,33 @@
+generated: '2026-08-19'
+method: generated
+source: >-
+  Authored from the Cisco-published OpenAPI 3.0.3
+  (openapi/_original/cisco-psirt-openvuln-openapi.json) plus
+  conventions/cisco-psirt-conventions.yml, errors/cisco-psirt-error-codes.yml,
+  rate-limits/cisco-psirt-rate-limits.yml and
+  authentication/cisco-psirt-authentication.yml. Cisco publishes no AGENTS.md or
+  skill files of its own — searched github.com/CiscoPSIRT and
+  developer.cisco.com/docs/psirt/ before generating.
+grounding_note: >-
+  Cisco's OpenAPI declares NO operationId on any of its 30 operations, so every
+  step in these skills is grounded in the verbatim METHOD + PATH from the published
+  contract. Where an operationId is mentioned it is labelled as PROPOSED and comes
+  from overlays/cisco-psirt-current-endpoints-api-overlay.yaml — it is our
+  suggestion, not Cisco's contract.
+skills:
+  - file: cisco-psirt-check-cve-exposure.md
+    name: Check whether a CVE affects Cisco products
+    api: openapi/cisco-psirt-current-endpoints-api-openapi.yml
+    operations: ['GET /cve/{cve_id}', 'GET /advisory/{advisoryId}']
+  - file: cisco-psirt-monitor-new-advisories.md
+    name: Incrementally sync new and updated Cisco advisories
+    api: openapi/cisco-psirt-current-endpoints-api-openapi.yml
+    operations: ['GET /all/lastpublished', 'GET /all/firstpublished', 'GET /latest/{number}']
+  - file: cisco-psirt-check-software-release.md
+    name: Check whether a specific Cisco software release is affected
+    api: openapi/cisco-psirt-current-endpoints-api-openapi.yml
+    operations: ['GET /OSType/{OSType}', 'GET /OS_version/OS_data', 'GET /platforms']
+  - file: cisco-psirt-triage-critical-advisories.md
+    name: Triage Cisco advisories by severity
+    api: openapi/cisco-psirt-current-endpoints-api-openapi.yml
+    operations: ['GET /severity/{severity}', 'GET /severity/{severity}/firstpublished', 'GET /severity/{severity}/lastpublished', 'GET /product']

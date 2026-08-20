@@ -1,0 +1,64 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Cisco PSIRT openVuln API (obsolete endpoints api)
+  version: 1.0.0
+extends: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+x-generated: '2026-08-19'
+x-method: generated
+x-source: Derived from openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml. Proposes an operationId for every
+  operation Cisco left unnamed, and links the derived API Evangelist artifacts.
+x-operation-ids-proposed: 10
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/providers/cisco-psirt/
+    x-apievangelist-artifacts:
+      authentication: authentication/cisco-psirt-authentication.yml
+      conventions: conventions/cisco-psirt-conventions.yml
+      errors: errors/cisco-psirt-problem-types.yml
+      error_codes: errors/cisco-psirt-error-codes.yml
+      lifecycle: lifecycle/cisco-psirt-lifecycle.yml
+      rate_limits: rate-limits/cisco-psirt-rate-limits.yml
+      data_model: data-model/cisco-psirt-data-model.yml
+      scopes: scopes/cisco-psirt-scopes.yml
+    x-apievangelist-note: Enhancements only. The Cisco-published contract is unmodified; apply this overlay to add
+      them.
+- target: $.paths['/cvrf/advisory/{advisoryId}'].get
+  update:
+    operationId: getCvrfAdvisoryByAdvisoryid
+    summary: Used to obtain an advisory given its advisory ID `advisoryId` (i.e., cisco-sa-20180221-ucdm)
+- target: $.paths['/cvrf/all'].get
+  update:
+    operationId: getCvrfAll
+    summary: Used to obtain information about all published security advisories
+- target: $.paths['/cvrf/all/firstpublished'].get
+  update:
+    operationId: getCvrfAllFirstpublished
+    summary: Used to obtain information about all published security advisories first published within a date timeframe
+- target: $.paths['/cvrf/all/lastpublished'].get
+  update:
+    operationId: getCvrfAllLastpublished
+    summary: Used to obtain information about all published security advisories last published within a date timeframe
+- target: $.paths['/cvrf/cve/{cve_id}'].get
+  update:
+    operationId: getCvrfCveByCveId
+    summary: Used to obtain an advisory using a given Common Vulnerability Enumerator (CVE)
+- target: $.paths['/cvrf/product'].get
+  update:
+    operationId: getCvrfProduct
+    summary: Used to obtain all the advisories that affects the given product name
+- target: $.paths['/cvrf/severity/{severity}'].get
+  update:
+    operationId: getCvrfSeverityBySeverity
+    summary: Used to obtain all security advisories for a given security impact rating (critical, high, medium,
+      low or informational)
+- target: $.paths['/cvrf/severity/{severity}/lastpublished'].get
+  update:
+    operationId: getCvrfSeverityBySeverityLastpublished
+- target: $.paths['/cvrf/severity/{severity}/firstpublished'].get
+  update:
+    operationId: getCvrfSeverityBySeverityFirstpublished
+- target: $.paths['/cvrf/year/{year}'].get
+  update:
+    operationId: getCvrfYearByYear
+    summary: Used to obtain all security advisories that have were originally published in a specific year `YYYY`

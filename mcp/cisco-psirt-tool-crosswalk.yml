@@ -1,0 +1,145 @@
+generated: '2026-08-19'
+method: derived
+source: >-
+  The tool list published in
+  https://github.com/santosomar/openvuln-mcp-server/blob/main/README.md, bound to
+  the operations in openapi/_original/cisco-psirt-openvuln-openapi.json.
+description: >-
+  Binds every MCP tool that exists for this API to its backing Cisco REST
+  operation, so the tool inherits a REAL input contract instead of a guessed one.
+  Two things make this crosswalk unusual. First, there is no first-party MCP
+  server — the only tool surface is a community one, so the crosswalk measures a
+  THIRD-PARTY projection of Cisco's contract. Second, Cisco's OpenAPI declares no
+  operationId on any of its 30 operations, so bindings are expressed as METHOD +
+  PATH (the only stable handle the published contract provides), with the
+  operationId our overlay proposes recorded alongside.
+surfaces:
+  openapi:
+    files:
+      - openapi/cisco-psirt-current-endpoints-api-openapi.yml
+      - openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+      - openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    original: openapi/_original/cisco-psirt-openvuln-openapi.json
+    operations: 30
+    current_operations: 15
+    gated: false
+    note: Publicly fetchable from Cisco's own GitHub org. Calling it requires OAuth2.
+    operation_ids_present: false
+  graphql:
+    endpoint: null
+    note: No GraphQL surface exists.
+  mcp:
+    first_party: null
+    third_party: https://github.com/santosomar/openvuln-mcp-server
+    gated: true
+    gated_reason: >-
+      Local-stdio only — no hosted endpoint exists to POST tools/list to, so no
+      live inputSchema was observed. Tools are mapped from the README's published
+      names, descriptions and parameters.
+crosswalk:
+  - tool: get_cisco_advisory_by_id
+    category: advisory-lookup
+    rest: ['GET /advisory/{advisoryId}']
+    proposed_operation_id: getAdvisoryByAdvisoryid
+    binding: rest
+    confidence: high
+    inherits_input_schema_from: 'paths./advisory/{advisoryId}.get.parameters'
+    real_parameters: [advisoryId (path, required, cisco-sa-XXX), summaryDetails (query, boolean), productNames (query, boolean)]
+    note: >-
+      The MCP tool exposes only advisory_id. The backing operation also accepts
+      summaryDetails and productNames, which materially change the payload — the
+      tool drops them, so an agent cannot ask for the advisory summary.
+  - tool: get_cisco_cve_details
+    category: advisory-lookup
+    rest: ['GET /cve/{cve_id}']
+    proposed_operation_id: getCveByCveId
+    binding: rest
+    confidence: high
+    inherits_input_schema_from: 'paths./cve/{cve_id}.get.parameters'
+    real_parameters: [cve_id (path, required, CVE-YYYY-NNNN), summaryDetails (query, boolean), productNames (query, boolean)]
+    note: >-
+      Named "details" but it returns Cisco ADVISORIES that address the CVE, not CVE
+      record details. A 404/NO_DATA_FOUND means Cisco has no advisory for that CVE,
+      not that the CVE does not exist.
+  - tool: get_latest_cisco_advisories
+    category: advisory-feed
+    rest: ['GET /latest/{number}']
+    proposed_operation_id: getLatestByNumber
+    binding: rest
+    confidence: high
+    inherits_input_schema_from: 'paths./latest/{number}.get.parameters'
+    real_parameters: [number (path, required, integer 1-100), summaryDetails (query, boolean), productNames (query, boolean)]
+    note: >-
+      Tool defaults number to 5. The REST operation caps it at 100 and returns
+      INVALID_ADV_COUNT outside 1-100.
+  - tool: list_cisco_advisories_by_severity
+    category: advisory-search
+    rest: ['GET /severity/{severity}']
+    proposed_operation_id: getSeverityBySeverity
+    binding: rest
+    confidence: high
+    inherits_input_schema_from: 'paths./severity/{severity}.get.parameters'
+    real_parameters: [severity (path, required, enum critical|high|medium|low|informational), pageIndex (query, 1-100), pageSize (query, 1-100), summaryDetails, productNames]
+    note: >-
+      DIVERGENCE. The tool documents only Critical/High/Medium/Low; the spec enum
+      also allows "informational". The tool also drops pageIndex/pageSize, so it
+      can only ever see the first page — a real capability loss on the largest
+      result sets in the API.
+  - tool: get_cisco_advisories_by_product
+    category: advisory-search
+    rest: ['GET /product']
+    proposed_operation_id: getProduct
+    binding: rest
+    confidence: high
+    inherits_input_schema_from: paths./product.get.parameters
+    real_parameters: [product (query, required, string), pageIndex, pageSize, summaryDetails, productNames]
+    note: >-
+      Product names must avoid special characters (&,!,$,',@,#,<,?) or the API
+      returns INVALID_PRODUCT_NAME_FORMAT. Wildcards are allowed (e.g. 'cisco-xe*').
+mcp_only: []
+mcp_only_note: >-
+  None. Every tool in the community server maps 1:1 onto a public REST operation —
+  there are no composites and no GraphQL-backed tools, which is expected for a
+  read-only API with a flat data model.
+rest_only:
+  - capability: Full-corpus paging
+    operations: ['GET /all']
+    proposed_operation_id: getAll
+    reason: No tool exposes the unfiltered corpus or its pagination.
+  - capability: Date-range queries
+    operations:
+      - 'GET /all/firstpublished'
+      - 'GET /all/lastpublished'
+      - 'GET /severity/{severity}/firstpublished'
+      - 'GET /severity/{severity}/lastpublished'
+    reason: >-
+      No tool exposes startDate/endDate. This is the most significant gap: date-range
+      polling is the ONLY programmatic freshness mechanism this API offers (there
+      are no webhooks), so no agent using the community server can do incremental
+      sync.
+  - capability: Bug ID lookup
+    operations: ['GET /bugid/{bug_id}']
+    reason: No tool binds it, despite it being a first-class query endpoint.
+  - capability: Year queries
+    operations: ['GET /year/{year}']
+    reason: No tool binds it.
+  - capability: Software Checker / OS version matching
+    operations: ['GET /OSType/{OSType}', 'GET /OS_version/OS_data', 'GET /platforms', 'GET /ios', 'GET /iosxe', 'GET /aci', 'GET /nxos', 'GET /nos_version/nos_data']
+    reason: >-
+      Entirely unbound. "Is release X of IOS XE affected?" is arguably the highest-
+      value question this API answers, and no MCP tool asks it.
+  - capability: Obsolete CVRF endpoints
+    operations: ['GET /cvrf/*']
+    reason: Correctly unbound — all 10 are deprecated:true and return 410 Gone.
+    correct: true
+coverage:
+  tools_named: 5
+  tools_bound: 5
+  tools_unbound: 0
+  mcp_only: 0
+  rest_operations_total: 30
+  rest_operations_current: 15
+  rest_operations_with_a_tool: 5
+  rest_operations_without_a_tool: 25
+  current_operation_coverage: '5 of 15 (33%)'
+  first_party_mcp_coverage: '0 of 15 (0%)'

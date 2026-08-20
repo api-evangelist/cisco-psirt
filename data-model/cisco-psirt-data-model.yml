@@ -1,0 +1,120 @@
+generated: '2026-08-19'
+method: derived
+source: >-
+  openapi/_original/cisco-psirt-openvuln-openapi.json — components.schemas plus the
+  path/query identifier formats. Enriched with the field list Cisco publishes for
+  its own client at https://github.com/CiscoPSIRT/openVulnQuery.
+description: >-
+  A small, flat, denormalised model. The openVuln API has exactly one first-class
+  entity — the Advisory — and three lookup entities that exist to make software-
+  version queries possible (OS type, OS version, platform alias). There are no
+  nested objects and no $ref relationships between the response schemas: every
+  cross-entity link is carried as a STRING, and often as a comma-joined string
+  rather than an array. That is the defining characteristic of this data model and
+  the main friction for an agent consuming it.
+entities:
+  - name: Advisory
+    schema: Advisories
+    primary_key: advisoryId
+    id_format: cisco-sa-XXX
+    id_examples: ['cisco-sa-lsplus-Z6AQEOjk', 'cisco-sa-20180221-ucdm']
+    description: A published Cisco security advisory. The only real resource in the API.
+    fields:
+      - {name: advisoryId, type: string, role: identifier}
+      - {name: advisoryTitle, type: string}
+      - {name: bugIDs, type: string, role: foreign-identifier, target: CiscoBug, cardinality: many, note: 'Comma-joined string, not an array.'}
+      - {name: cves, type: string, role: foreign-identifier, target: CVE, cardinality: many, note: 'Comma-joined string, not an array.'}
+      - {name: cwe, type: string, role: foreign-identifier, target: CWE, cardinality: many}
+      - {name: ipsSignatures, type: string, note: 'NA when absent.'}
+      - {name: cvssBaseScore, type: number, role: metric, standard: CVSS}
+      - {name: sir, type: string, role: classification, standard: Cisco Security Impact Rating, values: [Critical, High, Medium, Low, Informational]}
+      - {name: status, type: string, example: Final}
+      - {name: version, type: number, role: revision, example: 1.1}
+      - {name: firstPublished, type: string, format: date-time, timezone: UTC}
+      - {name: lastUpdated, type: string, format: date-time, timezone: UTC}
+      - {name: productNames, type: string, cardinality: many, note: 'Gated behind the productNames=true query parameter.'}
+      - {name: summary, type: string, format: html, note: 'Gated behind summaryDetails=true. Contains raw HTML, including editorial markup left over from Cisco''s authoring tool.'}
+      - {name: publicationUrl, type: string, format: uri, target: tools.cisco.com advisory page}
+      - {name: cvrfUrl, type: string, format: uri, target: CVRF XML document, status: retiring}
+      - {name: csafUrl, type: string, format: uri, target: CSAF JSON document, status: preferred}
+    accessed_by:
+      - 'GET /advisory/{advisoryId}'
+      - 'GET /cve/{cve_id}'
+      - 'GET /bugid/{bug_id}'
+      - 'GET /all'
+      - 'GET /latest/{number}'
+      - 'GET /severity/{severity}'
+      - 'GET /year/{year}'
+      - 'GET /product'
+      - 'GET /ios, /iosxe, /aci, /nxos'
+  - name: OSVersionQuery
+    schema: OSData
+    description: >-
+      The answer to "which advisories affect this exact software release" — the
+      Cisco Software Checker integration surfaced through the API.
+    fields:
+      - {name: nos_type, type: string, example: NXOS}
+      - {name: nos_version, type: string, example: '7.0(3)F1(1)'}
+      - {name: platform_name, type: string, example: Cisco Nexus 9000 Series Switches}
+    accessed_by: ['GET /OS_version/OS_data', 'GET /nos_version/nos_data']
+  - name: PlatformAlias
+    schema: PlatformData
+    primary_key: id
+    description: A platform grouping used to narrow an OS-version query.
+    fields:
+      - {name: id, type: integer, example: 265086}
+      - {name: platformAlias, type: string, example: MDS9000}
+      - {name: name, type: string, example: Cisco MDS 9000 Multilayer Directors and Fabric Switches}
+    accessed_by: ['GET /platforms']
+  - name: OSType
+    schema: OSTypes
+    description: Controlled vocabulary of the network operating systems the API can be queried against.
+    values: [aci, ios, iosxe, nxos, asa, ftd, fmc, fxos]
+    platform_capable_subset: [asa, ftd, fxos, nxos]
+    accessed_by: ['GET /OSType/{OSType}']
+  - name: EndOfLife
+    schema: EndofLife
+    description: >-
+      Not a data entity — the 410 Gone body returned by every /cvrf/* operation.
+      Recorded here because it is a components.schema and would otherwise look like
+      a resource.
+    fields:
+      - {name: errorCode, example: URI_NOT_AVAILABLE}
+      - {name: errorMessage, example: 'URI_CONTAINING(/CVRF/)_IS_NO_LONGER_AVAILABLE'}
+external_identifiers:
+  - {name: CVE, authority: MITRE/CVE Program, format: 'CVE-YYYY-NNNN', field: cves, queryable: true}
+  - {name: CWE, authority: MITRE, format: 'CWE-NN', field: cwe, queryable: false}
+  - {name: CVSS, authority: FIRST, field: cvssBaseScore, queryable: false}
+  - {name: Cisco Bug ID, authority: Cisco, format: 'CSCxyNNNNN', field: bugIDs, queryable: true}
+relationships:
+  - {from: Advisory, to: CVE, type: has_many, via: cves, encoding: comma-joined-string, reverse_lookup: 'GET /cve/{cve_id}'}
+  - {from: Advisory, to: CiscoBug, type: has_many, via: bugIDs, encoding: comma-joined-string, reverse_lookup: 'GET /bugid/{bug_id}'}
+  - {from: Advisory, to: CWE, type: has_many, via: cwe, encoding: string, reverse_lookup: none}
+  - {from: Advisory, to: Product, type: has_many, via: productNames, encoding: comma-joined-string, reverse_lookup: 'GET /product'}
+  - {from: Advisory, to: CSAFDocument, type: has_one, via: csafUrl, encoding: uri}
+  - {from: Advisory, to: CVRFDocument, type: has_one, via: cvrfUrl, encoding: uri, status: retiring}
+  - {from: Advisory, to: PublicationPage, type: has_one, via: publicationUrl, encoding: uri}
+  - {from: OSType, to: PlatformAlias, type: has_many, via: platformAlias, note: 'Only for asa, ftd, fxos, nxos.'}
+  - {from: OSVersionQuery, to: Advisory, type: has_many, via: 'nos_type + nos_version', note: 'Software Checker join, resolved server-side.'}
+observations:
+  - >-
+    NO $ref relationships exist between the response schemas. Every entity is a
+    flat bag of scalars; the graph above is reconstructed entirely from identifier
+    fields and from which endpoint accepts which identifier.
+  - >-
+    Multi-valued fields (cves, bugIDs, cwe, productNames) are typed as plain
+    "string" with a single-value example, so a naive code generator will produce a
+    String where the wire actually carries a comma-joined list. This is the single
+    most likely integration bug against this API.
+  - >-
+    summary contains raw HTML with authoring-tool artefacts (mce-annotation spans)
+    visible in Cisco's own published example. Sanitise before rendering.
+  - >-
+    The richest representation of an advisory is NOT in this API — it is the CSAF
+    document at csafUrl. The API is best used as an index over the CSAF corpus at
+    https://www.cisco.com/.well-known/csaf/.
+summary:
+  entities: 5
+  first_class_entities: 1
+  relationships: 9
+  ref_links_in_spec: 0

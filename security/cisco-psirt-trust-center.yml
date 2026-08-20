@@ -1,0 +1,49 @@
+generated: '2026-08-19'
+method: searched
+probe: true
+url: https://trust.cisco.com/
+resolved_url: https://www.cisco.com/c/en/us/about/trust-center.html
+description: >-
+  Cisco operates a two-part trust surface: the Trust Center (narrative — trust
+  principles, transparency, responsible-AI framework, vulnerability-disclosure
+  posture) and the Trust Portal (self-service document access — audit reports,
+  penetration tests, security questionnaires, privacy data sheets). Named
+  certifications live on the Portal, not on the Center landing page.
+trust_portal: https://trustportal.cisco.com/c/r/ctp/home.html
+certifications:
+  - SOC 2
+  - ISO 27001
+  - FedRAMP
+  - BSI C5
+  - GDPR
+certification_note: >-
+  These are the frameworks the Trust Portal names verbatim in its own document
+  categories — "Audit Reports (SOC, FedRAMP, ISO, C5)" and Trust Packages
+  containing "SOC2/ISO 27001 Certification" and "Privacy Data Sheet/Maps (GDPR)".
+  They are CORPORATE and PER-PRODUCT attestations obtained through the Portal per
+  Trust Package (AppDynamics, CX Cloud, Webex Meetings, Umbrella, …). The PSIRT
+  openVuln API is NOT itself listed as a Trust Package, so none of these
+  certifications should be read as an attestation scoped to this API.
+document_categories:
+  - Audit Reports (SOC, FedRAMP, ISO, C5)
+  - Pen Tests and Security Assessments
+  - Security Questionnaires
+  - Offer Disclosures
+  - Business Continuity / Disaster Recovery
+  - SIG/CAIQ Risk Questionnaire
+related:
+  cloud_controls_framework: https://www.cisco.com/c/en/us/about/trust-center/compliance/ccf.html
+  csa_star_registry: https://cloudsecurityalliance.org/star/registry/cisco-systems
+evidence:
+  - source: https://trust.cisco.com/
+    http_status: 200
+    redirects_to: https://www.cisco.com/c/en/us/about/trust-center.html
+    keywords: [trust center, trust portal, transparency, certifications, privacy, compliance]
+    fetched: '2026-08-19'
+  - source: https://trustportal.cisco.com/c/r/ctp/home.html
+    http_status: 200
+    keywords: [soc2, iso 27001, fedramp, gdpr, c5, compliance]
+    fetched: '2026-08-19'
+note: >-
+  The automated probe returned trust=none because it only reaches the hosts named
+  in apis.yml. This file is the SEARCHED upgrade against Cisco's real trust hosts.

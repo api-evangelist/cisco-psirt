@@ -1,0 +1,145 @@
+generated: '2026-08-19'
+method: derived
+status: candidate
+source: >-
+  Derived from openapi/cisco-psirt-current-endpoints-api-openapi.yml. Searched for
+  a first-party Cisco MCP server for the PSIRT openVuln API across
+  developer.cisco.com, github.com/CiscoPSIRT, npm and the MCP registries — none
+  exists. Two THIRD-PARTY servers were found and are recorded below, clearly
+  separated, because neither is shipped by Cisco.
+description: >-
+  Cisco ships no MCP server for the PSIRT openVuln API. The tools[] below are a
+  CANDIDATE mapping we derived from Cisco's own published OpenAPI operations — a
+  proposal, not a product. No MCPServer pointer is written into apis.yml, because
+  emitting one would credit Cisco with an agent surface it does not operate.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: oauth
+  auth_note: >-
+    Any MCP server for this API must carry an OAuth 2.0 client-credentials exchange
+    against https://id.cisco.com/oauth2/default/v1/token and hold a Cisco API
+    Console client_id/client_secret. There is no anonymous access.
+  verified: searched
+  note: >-
+    mode is none because nobody ships a server on Cisco's behalf that Cisco stands
+    behind. The two community servers below are local-stdio projects a human must
+    clone and run; neither publishes a hosted https endpoint an agent can POST to.
+server:
+  name: cisco-psirt-openvuln
+  transport: null
+  url: null
+tools:
+  - name: get_advisory
+    description: Retrieve a single Cisco security advisory by its advisory id (cisco-sa-XXX).
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /advisory/{advisoryId}'
+    proposed_operation_id: getAdvisoryByAdvisoryid
+    read_only: true
+  - name: get_advisories_by_cve
+    description: Retrieve the Cisco advisories that address a given CVE identifier.
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /cve/{cve_id}'
+    proposed_operation_id: getCveByCveId
+    read_only: true
+  - name: get_advisories_by_bug_id
+    description: Retrieve the Cisco advisories associated with a Cisco Bug ID (CSCxyNNNNN).
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /bugid/{bug_id}'
+    proposed_operation_id: getBugidByBugId
+    read_only: true
+  - name: list_latest_advisories
+    description: Retrieve the N most recently published advisories (1-100).
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /latest/{number}'
+    proposed_operation_id: getLatestByNumber
+    read_only: true
+  - name: list_advisories_by_severity
+    description: List advisories by Cisco Security Impact Rating (critical, high, medium, low, informational).
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /severity/{severity}'
+    proposed_operation_id: getSeverityBySeverity
+    read_only: true
+  - name: list_advisories_by_severity_in_range
+    description: List advisories of a given severity first- or last-published inside a date range.
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /severity/{severity}/firstpublished, GET /severity/{severity}/lastpublished'
+    read_only: true
+  - name: list_advisories_by_product
+    description: List advisories matching a product name.
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /product'
+    proposed_operation_id: getProduct
+    read_only: true
+  - name: list_advisories_by_year
+    description: List advisories published in a given year (1995 to present).
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /year/{year}'
+    proposed_operation_id: getYearByYear
+    read_only: true
+  - name: list_all_advisories
+    description: Page the full advisory corpus (pageIndex/pageSize, both capped at 100).
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /all'
+    proposed_operation_id: getAll
+    read_only: true
+  - name: list_advisories_in_date_range
+    description: Page advisories first- or last-published inside a date range (YYYY-MM-DD).
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /all/firstpublished, GET /all/lastpublished'
+    read_only: true
+  - name: check_software_release
+    description: >-
+      Check whether a specific software release is affected, via the Cisco Software
+      Checker integration (ASA, FMC, FTD, FXOS, IOS, IOS XE, NX-OS, NX-OS ACI).
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /OSType/{OSType}, GET /OS_version/OS_data'
+    read_only: true
+  - name: list_platforms
+    description: List platform aliases for the operating systems that support them (asa, ftd, fxos, nxos).
+    source_operation: 'openapi/cisco-psirt-current-endpoints-api-openapi.yml#GET /platforms'
+    proposed_operation_id: getPlatforms
+    read_only: true
+third_party_servers:
+  - name: openvuln-mcp-server
+    repo: https://github.com/santosomar/openvuln-mcp-server
+    author: Omar Santos
+    first_party: false
+    first_party_note: >-
+      Authored by a Cisco Distinguished Engineer (the same author as Cisco's
+      openVulnQuery client) but published from a PERSONAL GitHub account, not the
+      CiscoPSIRT organization, and not referenced from any Cisco documentation.
+      Treated as third-party.
+    license: Apache-2.0
+    language: python
+    framework: FastMCP
+    deployment:
+      mode: local-stdio
+      endpoint: null
+      install: 'git clone; pip install -r requirements.txt; fastmcp run src/openvuln_mcp_server.py:mcp_server'
+      package: https://github.com/santosomar/openvuln-mcp-server
+      auth: api-key
+      auth_detail: 'CISCO_OPENVULN_CLIENT_ID / CISCO_OPENVULN_CLIENT_SECRET in a .env file'
+      verified: searched
+    last_push: '2025-06-17'
+    stars: 2
+    tools:
+      - get_cisco_advisory_by_id
+      - get_cisco_cve_details
+      - get_latest_cisco_advisories
+      - list_cisco_advisories_by_severity
+      - get_cisco_advisories_by_product
+  - name: mcp-cisco-support
+    repo: https://github.com/sieteunoseis/mcp-cisco-support
+    first_party: false
+    first_party_note: >-
+      Community project listed on Cisco Code Exchange (a community directory, not a
+      Cisco product line). Covers the broader Cisco Support API family — Bug
+      Search, Case Management, EoX — rather than openVuln specifically.
+    language: typescript
+    listing: https://developer.cisco.com/codeexchange/github/repo/sieteunoseis/mcp-cisco-support/
+    deployment:
+      mode: local-stdio
+      endpoint: null
+      auth: api-key
+      verified: searched
+gaps:
+  - >-
+    tools/list could not be introspected on any server: neither third-party project
+    publishes a hosted endpoint, so no live inputSchema was observed. The candidate
+    tools above inherit their real input contract from the backing OpenAPI
+    operation's parameters — see mcp/cisco-psirt-tool-crosswalk.yml.
+  - >-
+    Any server must implement client-side rate limiting: 5 calls/sec, 30/min,
+    5000/day per registered application, with no RateLimit-* headers to observe.

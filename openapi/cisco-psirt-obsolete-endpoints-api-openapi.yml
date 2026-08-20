@@ -1,0 +1,652 @@
+openapi: 3.2.0
+info:
+  version: 2.0.2
+  title: Cisco PSIRT openVuln Obsolete Endpoints API
+  description: 'The Cisco Product Security Incident Response Team (PSIRT) openVuln API is a RESTful API that allows customers to obtain Cisco Security Vulnerability information in different machine-consumable formats. APIs are important for customers because they allow their technical staff and programmers to build tools that help them do their job more effectively (in this case, to keep up with security vulnerability information).
+
+    For more information about the Cisco PSIRT openVuln API visit https://developer.cisco.com/psirt/
+
+    For detail steps on how to use the API go to: https://developer.cisco.com/docs/psirt/
+
+    '
+  termsOfService: https://github.com/CiscoPSIRT/openVulnAPI/blob/master/LICENSE.md
+  contact:
+    name: Cisco PSIRT
+    url: https://tools.cisco.com/security/center/publicationListing.x
+    email: openvuln@cisco.com
+  x-provenance:
+    method: harvested
+    authored_by: Cisco PSIRT
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    note: Published by Cisco. Retrieved unmodified except for this x-provenance block.
+    provider_published: true
+  x-evidence:
+  - type: source
+    url: https://github.com/CiscoPSIRT/openVulnAPI/blob/master/swagger/openVulnAPIOAS_3_0_3.yaml
+  - type: raw
+    url: https://raw.githubusercontent.com/CiscoPSIRT/openVulnAPI/master/swagger/openVulnAPIOAS_3_0_3.yaml
+servers:
+- url: https://api.cisco.com/{basePath}
+  description: OpenVuln API - Applications created prior March 1, 2023; expires Sep 30, 2023
+  variables:
+    basePath:
+      default: security/advisories/v2
+      enum:
+      - security/advisories
+      - security/advisories/v2
+- url: https://apix.cisco.com/{basePath}
+  description: OpenVuln API - Applications created post March 1, 2023
+  variables:
+    basePath:
+      default: security/advisories/v2
+      enum:
+      - security/advisories
+      - security/advisories/v2
+security:
+- psirt_openvuln_api_auth: []
+tags:
+- name: Obsolete Endpoints
+  description: These API endpoints are no longer available.  Migrate to current version calls.
+paths:
+  /cvrf/advisory/{advisoryId}:
+    get:
+      description: Used to obtain an advisory given its advisory ID `advisoryId` (i.e., cisco-sa-20180221-ucdm)
+      deprecated: true
+      tags:
+      - Obsolete Endpoints
+      parameters:
+      - name: advisoryId
+        in: path
+        description: Enter advisory ID.  Defaults to .json format, use advisoryId.xml if require xml format.
+        required: true
+        schema:
+          type: string
+          format: cisco-sa-XXX
+      - name: summaryDetails
+        in: query
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - name: productNames
+        in: query
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '410':
+          description: Endpoint containing /cvrf/ is now obsolete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+  /cvrf/all:
+    get:
+      description: Used to obtain information about all published security advisories.
+      deprecated: true
+      tags:
+      - Obsolete Endpoints
+      parameters:
+      - name: summaryDetails
+        in: query
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - name: lastpublished
+        in: query
+        description: Get Advisories by the lastpublished date with startDate=2022-05-12&endDate=2022-05-16
+        required: false
+        schema:
+          type: string
+      - name: productNames
+        in: query
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - name: pageIndex
+        in: query
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: pageSize
+        in: query
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '410':
+          description: Endpoint containing /cvrf/ is now obsolete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+  /cvrf/all/firstpublished:
+    get:
+      description: Used to obtain information about all published security advisories first published within a date timeframe.
+      deprecated: true
+      tags:
+      - Obsolete Endpoints
+      parameters:
+      - name: summaryDetails
+        in: query
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - name: productNames
+        in: query
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - name: startDate
+        description: Format example Year-Month-Day 2022-05-12
+        in: query
+        required: true
+        schema:
+          type: string
+          format: string
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+      - name: endDate
+        in: query
+        description: Format example Year-Month-Day 2022-05-12
+        required: true
+        schema:
+          type: string
+          format: string
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+      - name: pageIndex
+        in: query
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: pageSize
+        in: query
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '410':
+          description: Endpoint containing /cvrf/ is now obsolete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+  /cvrf/all/lastpublished:
+    get:
+      description: Used to obtain information about all published security advisories last published within a date timeframe.
+      deprecated: true
+      tags:
+      - Obsolete Endpoints
+      parameters:
+      - name: summaryDetails
+        in: query
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - name: productNames
+        in: query
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - name: startDate
+        in: query
+        description: Format example Year-Month-Day 2022-05-12
+        required: true
+        schema:
+          type: string
+          format: string
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+      - name: endDate
+        in: query
+        description: Format example Year-Month-Day 2022-05-12
+        required: true
+        schema:
+          type: string
+          format: string
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+      - name: pageIndex
+        in: query
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: pageSize
+        in: query
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '410':
+          description: Endpoint containing /cvrf/ is now obsolete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+  /cvrf/cve/{cve_id}:
+    get:
+      description: Used to obtain an advisory using a given Common Vulnerability Enumerator (CVE). The `cve_id` format is CVE-YYYY-NNNN. For more information about CVE visit http://cve.mitre.org/
+      deprecated: true
+      tags:
+      - Obsolete Endpoints
+      parameters:
+      - name: cve_id
+        in: path
+        description: CVE Identifier (i.e., CVE-YYYY-NNNN)
+        required: true
+        schema:
+          type: string
+          format: CVE-YYYY-NNNN
+      - name: summaryDetails
+        in: query
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - name: productNames
+        in: query
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '410':
+          description: Endpoint containing /cvrf/ is now obsolete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+  /cvrf/product:
+    get:
+      description: Used to obtain all the advisories that affects the given product name.
+      deprecated: true
+      tags:
+      - Obsolete Endpoints
+      parameters:
+      - name: product
+        in: query
+        description: An product name to obtain security advisories that matches given product name.
+        required: true
+        schema:
+          type: string
+          format: string
+      - name: summaryDetails
+        in: query
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - name: productNames
+        in: query
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - name: pageIndex
+        in: query
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: pageSize
+        in: query
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '410':
+          description: Endpoint containing /cvrf/ is now obsolete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+  /cvrf/severity/{severity}:
+    get:
+      description: Used to obtain all security advisories for a given security impact rating (critical, high, medium, low or informational)
+      deprecated: true
+      tags:
+      - Obsolete Endpoints
+      parameters:
+      - name: severity
+        in: path
+        description: Critical, High, Medium, Low or informational
+        required: true
+        schema:
+          type: string
+          enum:
+          - critical
+          - high
+          - medium
+          - low
+          - informational
+      - name: summaryDetails
+        in: query
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - name: productNames
+        in: query
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - name: pageIndex
+        in: query
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: pageSize
+        in: query
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '410':
+          description: Endpoint containing /cvrf/ is now obsolete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+  /cvrf/severity/{severity}/lastpublished:
+    get:
+      description: Used to obtain all security advisories for a given security impact rating (critical, high, medium, low or informational) and additionally filter based of lastpublished start date and enddate.
+      deprecated: true
+      tags:
+      - Obsolete Endpoints
+      parameters:
+      - name: severity
+        in: path
+        description: Used to obtain all advisories that have a specific security impact rating
+        required: true
+        schema:
+          type: string
+          enum:
+          - critical
+          - high
+          - medium
+          - low
+          - informational
+      - name: startDate
+        in: query
+        description: Format example Year-Month-Day 2022-05-12
+        required: true
+        schema:
+          type: string
+          format: string
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+      - name: endDate
+        in: query
+        description: Format example Year-Month-Day 2022-05-12
+        required: true
+        schema:
+          type: string
+          format: string
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+      - name: summaryDetails
+        in: query
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - name: productNames
+        in: query
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - name: pageIndex
+        in: query
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: pageSize
+        in: query
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '410':
+          description: Endpoint containing /cvrf/ is now obsolete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+  /cvrf/severity/{severity}/firstpublished:
+    get:
+      description: Used to obtain all security advisories for a given security impact rating (critical, high, medium, low or informational) and additionally filter based of firstpublished start date and enddate.
+      deprecated: true
+      tags:
+      - Obsolete Endpoints
+      parameters:
+      - name: severity
+        in: path
+        description: Used to obtain all advisories that have a specific security impact rating
+        required: true
+        schema:
+          type: string
+          enum:
+          - critical
+          - high
+          - medium
+          - low
+          - informational
+      - name: startDate
+        in: query
+        description: Format example Year-Month-Day 2022-05-12
+        required: true
+        schema:
+          type: string
+          format: string
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+      - name: endDate
+        in: query
+        required: true
+        schema:
+          type: string
+          format: string
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+      - name: summaryDetails
+        in: query
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - name: productNames
+        in: query
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - name: pageIndex
+        in: query
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: pageSize
+        in: query
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '410':
+          description: Endpoint containing /cvrf/ is now obsolete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+  /cvrf/year/{year}:
+    get:
+      description: Used to obtain all security advisories that have were originally published in a specific year `YYYY`.
+      deprecated: true
+      tags:
+      - Obsolete Endpoints
+      parameters:
+      - name: year
+        in: path
+        description: The four digit year.
+        required: true
+        schema:
+          type: string
+          format: YYYY
+      - name: summaryDetails
+        in: query
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - name: productNames
+        in: query
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - name: pageIndex
+        in: query
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: pageSize
+        in: query
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '410':
+          description: Endpoint containing /cvrf/ is now obsolete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/EndofLife'
+components:
+  schemas:
+    EndofLife:
+      description: And End of Life endpoint.  Migrate your code to latest API endpoint.
+      properties:
+        errorCode:
+          type: string
+          example: URI_NOT_AVAILABLE
+        errorMessage:
+          type: string
+          example: URI_CONTAINING(/CVRF/)_IS_NO_LONGER_AVAILABLE
+  securitySchemes:
+    psirt_openvuln_api_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+externalDocs:
+  description: Read the formal Documentation here
+  url: https://developer.cisco.com/docs/psirt/

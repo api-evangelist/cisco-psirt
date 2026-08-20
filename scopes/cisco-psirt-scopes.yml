@@ -1,0 +1,72 @@
+generated: '2026-08-19'
+method: searched
+source: https://developer.cisco.com/docs/psirt/authentication/
+docs: https://developer.cisco.com/docs/psirt/authentication/
+description: >-
+  The openVuln API uses OAuth 2.0 client credentials but has effectively NO scope
+  model. Cisco publishes no scopes reference, no permissions page, and no
+  per-endpoint scope requirements; the OpenAPI declares the token only as an HTTP
+  bearer (no oauth2 securityScheme, therefore no flows.scopes map to derive from).
+  The single scope value in existence is the one visible in Cisco's own published
+  token response — "customscope" — which is granted uniformly to every application
+  registered against this API. Entitlement here is binary: your application is
+  either subscribed to the Cisco PSIRT openVuln API or it is not.
+derivation_note: >-
+  0-working/derive-oauth-scopes.py was run and returned zero oauth2 schemes and
+  zero scopes, because the spec models the token as http/bearer. This file is the
+  SEARCHED upgrade from the docs and must not be overwritten by that derived pass.
+schemes:
+  - name: cisco-oauth2-client-credentials
+    source: https://developer.cisco.com/docs/psirt/authentication/
+    flows:
+      - flow: clientCredentials
+        tokenUrl: https://id.cisco.com/oauth2/default/v1/token
+        authorizationUrl: null
+scopes:
+  - scope: customscope
+    description: >-
+      The scope Cisco's identity service returns in the access token for a
+      registered openVuln API application. Not documented as a named permission;
+      observed verbatim in the token response Cisco publishes in its own
+      authentication guide ("scope":"customscope").
+    flows: [clientCredentials]
+    sources: ['https://developer.cisco.com/docs/psirt/authentication/']
+    granularity: application-wide
+    authoritative: true
+  - scope: read:advisories
+    description: >-
+      Attached to 28 of the 30 operations as a security[] requirement on the
+      psirt_openvuln_api_auth scheme. Since that scheme is type http / scheme
+      bearer rather than oauth2, OpenAPI assigns this list no semantics — it is
+      decorative in the contract as published, and it is NOT the scope the token
+      endpoint actually returns.
+    flows: []
+    sources:
+      - openapi/cisco-psirt-current-endpoints-api-openapi.yml
+      - openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+      - openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+    granularity: per-operation-declared
+    authoritative: false
+    operations_declaring_it: 28
+    operations_without_it: ["/all/firstpublished", "/all/lastpublished"]
+scope_count: 2
+per_operation_scopes: declared-but-not-enforceable
+discrepancy:
+  finding: >-
+    The spec's per-operation scope (read:advisories) and the identity service's
+    issued scope (customscope) are different strings, and only the latter is real.
+  impact: >-
+    An integrator wiring an OAuth2 client from the spec would request a scope the
+    token endpoint does not grant. Worth reporting to Cisco: modelling the scheme
+    as oauth2/clientCredentials with a flows.scopes map would make the contract
+    self-consistent.
+  spec_evidence: 'openapi/_original/cisco-psirt-openvuln-openapi.json paths./all.get.security[0].psirt_openvuln_api_auth'
+  docs_evidence: 'https://developer.cisco.com/docs/psirt/authentication/ — token response "scope":"customscope"'
+entitlement_model:
+  type: api-subscription
+  detail: >-
+    Access is granted at registration time by selecting "Cisco PSIRT openVuln API"
+    in the Cisco API Console application form, not by requesting scopes at token
+    time. There is no consent screen and no user-delegated authorization — the
+    grant type is client credentials only.
+  console: https://apiconsole.cisco.com/

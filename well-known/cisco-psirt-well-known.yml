@@ -1,0 +1,123 @@
+generated: '2026-08-19'
+method: searched
+source: >-
+  Live probes of the /.well-known/ discovery surface on every host that carries
+  this API: the two OpenAPI servers[] hosts (api.cisco.com, apix.cisco.com), the
+  developer portal / docs host (developer.cisco.com), and the corporate root
+  (www.cisco.com) that the openVuln API's own security.txt Canonical field names.
+description: >-
+  Cisco serves a real, PGP-signed RFC 9116 security.txt at the corporate root and
+  — unusually — a CSAF (Common Security Advisory Framework) provider-metadata.json
+  under /.well-known/csaf/. The CSAF document is directly relevant to this API:
+  the openVuln API returns CSAF/CVRF location data for every advisory, so the
+  well-known CSAF directory is the bulk-download twin of the API.
+hosts:
+  - host: https://www.cisco.com
+    note: >-
+      Corporate root. The security.txt here is the canonical one for Cisco PSIRT
+      (its own Canonical: field points back at this URL) and its Contact is
+      psirt@cisco.com — the team that operates this API.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        file: cisco-psirt-security.txt
+        note: RFC 9116, PGP clear-signed, Expires 2027-01-01.
+      - path: /.well-known/csaf/provider-metadata.json
+        status: 200
+        content_type: application/json
+        file: cisco-psirt-csaf-provider-metadata.json
+        note: >-
+          CSAF 2.0 provider metadata; role csaf_trusted_provider, publisher
+          "Cisco PSIRT", distribution directory https://www.cisco.com/.well-known/csaf/.
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+  - host: https://api.cisco.com
+    note: >-
+      OpenAPI servers[] host for applications registered before March 2023.
+      Fronted by a Mashery proxy (Server: Mashery Proxy) which answers 504 for
+      every unrouted path, so no /.well-known/ surface is reachable. A real API
+      path (/security/advisories/v2/all) answers 403 without a bearer token,
+      confirming the host is live and the 504s are routing, not outage.
+    documents:
+      - path: /.well-known/security.txt
+        status: 504
+      - path: /.well-known/openid-configuration
+        status: 504
+      - path: /.well-known/oauth-authorization-server
+        status: 504
+      - path: /.well-known/api-catalog
+        status: 504
+      - path: /.well-known/ai-plugin.json
+        status: 504
+      - path: /.well-known/agent-card.json
+        status: 504
+      - path: /.well-known/agent.json
+        status: 504
+  - host: https://apix.cisco.com
+    note: >-
+      OpenAPI servers[] host for applications registered after March 2023 — the
+      current production base. Same Mashery proxy behaviour as api.cisco.com.
+    documents:
+      - path: /.well-known/security.txt
+        status: 504
+      - path: /.well-known/openid-configuration
+        status: 504
+      - path: /.well-known/oauth-authorization-server
+        status: 504
+      - path: /.well-known/api-catalog
+        status: 504
+      - path: /.well-known/ai-plugin.json
+        status: 504
+      - path: /.well-known/agent-card.json
+        status: 504
+      - path: /.well-known/agent.json
+        status: 504
+  - host: https://developer.cisco.com
+    note: Developer portal + API reference host for this API.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://sec.cloudapps.cisco.com
+    note: >-
+      REJECTED AS A SOFT-200. This host answers HTTP 200 with an identical ~211KB
+      HTML page for EVERY /.well-known/* path probed, including agent-card.json.
+      The body begins <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">. It is a
+      catch-all, not a discovery surface, and nothing from it was recorded as a hit.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        rejected: soft-404-html-shell
+      - path: /.well-known/agent-card.json
+        status: 200
+        rejected: soft-404-html-shell
+      - path: /.well-known/agent.json
+        status: 200
+        rejected: soft-404-html-shell
+      - path: /.well-known/api-catalog
+        status: 200
+        rejected: soft-404-html-shell
+summary:
+  hits: 2
+  security_txt: true
+  csaf_provider_metadata: true
+  openid_configuration: false
+  oauth_authorization_server: false
+  api_catalog: false
+  agent_card: false

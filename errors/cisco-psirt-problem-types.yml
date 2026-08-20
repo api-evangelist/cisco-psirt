@@ -1,0 +1,200 @@
+generated: '2026-08-19'
+method: derived
+source: >-
+  openapi/_original/cisco-psirt-openvuln-openapi.json — every 4xx/5xx response
+  declared across the 30 published operations.
+format: bespoke
+format_note: >-
+  NOT RFC 9457. The openVuln API returns a two-field envelope — {errorCode,
+  errorMessage} — served as application/json OR application/xml depending on the
+  requested extension. There is no type URI, no title/detail/instance, no
+  problem+json media type. The errorCode string, not the HTTP status, is the field
+  an agent must branch on: 404 alone is ambiguous across six distinct causes.
+envelope:
+  media_types: [application/json, application/xml]
+  fields:
+    errorCode: A screaming-snake-case machine token, e.g. ADVISORYID_NOT_FOUND.
+    errorMessage: A human sentence, not stable enough to parse.
+  example_json: '{"errorCode": "ADVISORYID_NOT_FOUND", "errorMessage": "Advisory-id not found"}'
+  example_xml: |
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <advisory>
+      <errorCode>ADVISORYID_NOT_FOUND</errorCode>
+      <errorMessage>Advisory-id not found</errorMessage>
+    </advisory>
+problems:
+  - status: 404
+    error_code: ADVISORYID_NOT_FOUND
+    title: Advisory id not found
+    description: Invalid advisory id used or not found.
+    schema: errorCode_ADVISORYID_NOT_FOUND
+    source_operations: ['GET /advisory/{advisoryId}']
+  - status: 404
+    error_code: NO_DATA_FOUND
+    title: CVE id not found
+    description: Invalid or not found CVE-ID.
+    schema: errorCode_NO_DATA_FOUND_CVE
+    source_operations: ['GET /cve/{cve_id}']
+    note: >-
+      Reuses the NO_DATA_FOUND code with a different message ("CVE_ID not found"),
+      so the code alone cannot distinguish it from an empty severity query.
+  - status: 404
+    error_code: NO_DATA_FOUND
+    title: No advisories found
+    description: No advisories are found for the query.
+    schema: errorCode_NO_DATA_FOUND
+    source_operations:
+      - 'GET /all'
+      - 'GET /severity/{severity}'
+      - 'GET /severity/{severity}/firstpublished'
+      - 'GET /severity/{severity}/lastpublished'
+      - 'GET /all/firstpublished'
+      - 'GET /all/lastpublished'
+      - 'GET /year/{year}'
+    note: >-
+      An empty result set is modelled as a 404, not a 200 with an empty array. An
+      agent must NOT treat this as a failure — it is the normal "nothing matched"
+      answer and should not trigger a retry.
+  - status: 404
+    error_code: PRODUCT_NOT_FOUND
+    title: Product not found
+    description: >-
+      No advisories found matching product name. Cisco's response description
+      points at the Cisco product-name lookup on tools.cisco.com.
+    schema: errorCode_PRODUCT_NOT_FOUND
+    source_operations: ['GET /product']
+  - status: 404
+    error_code: NO_DATA_FOUND
+    title: Bug id not matched
+    description: >-
+      No advisories with the supplied Cisco Bug ID found. Cisco's own response
+      description warns "Currently this returns a partial match" — a known defect
+      recorded in the contract.
+    source_operations: ['GET /bugid/{bug_id}']
+  - status: 404
+    error_code: OS_TYPE_NOT_FOUND
+    title: OS type not found
+    description: OSType not found.
+    schema: errorCode_OS_TYPE_NOT_FOUND
+    source_operations: ['GET /OSType/{OSType}', 'GET /OS_version/OS_data']
+  - status: 404
+    error_code: INVALID_EXTENSION
+    title: Invalid extension used
+    description: >-
+      Cisco annotates this one against itself: "Invalid extension used. Currently
+      this [is] incorrect. In a minor update this will be moved to a 406 with the
+      correct error message." A self-declared status-code bug, in the published
+      contract.
+    source_operations: ['GET /all', 'GET /latest/{number}']
+    defect: acknowledged-by-provider
+  - status: 406
+    error_code: INVALID_PAGEINDEX
+    title: Invalid page index or size
+    description: pageIndex/pageSize outside the accepted range.
+    schema: errorCode_INVALID_PAGEINDEX
+    source_operations: ['GET /all', 'GET /all/firstpublished', 'GET /all/lastpublished', 'GET /severity/{severity}']
+  - status: 406
+    error_code: MIN_PAGESIZE / MAX_PAGESIZE
+    title: Page size out of range
+    description: Minimum page size value = 1 and maximum page size = 100.
+    schema: errorCode_MIN_PAGESIZE
+  - status: 406
+    error_code: INVALID_EXTENSION
+    title: Invalid extension used
+    description: 'Not supported extension type. Supported extension types are .json and .xml'
+    schema: errorCode_INVALID_EXTENSION
+  - status: 406
+    error_code: INVALID_ADV_COUNT
+    title: Invalid advisory count
+    description: Invalid advisory count used; latest count must be between 1 and 100.
+    schema: errorCode_INVALID_ADV_COUNT
+    source_operations: ['GET /latest/{number}']
+  - status: 406
+    error_code: INVALID_SEVERITY
+    title: Invalid severity
+    description: >-
+      "Invalid Severity. Supported severities are critical, high, medium, low and
+      informational" — note the spec's enum for the path parameter is narrower than
+      this message.
+    schema: errorCode_INVALID_SEVERITY
+  - status: 406
+    error_code: INVALID_PRODUCT_NAME_FORMAT
+    title: Invalid product name format
+    description: >-
+      "Special characters are not allowed (&,!,$,',@,#,!,<,?). Valid examples e.g
+      'cisco', 'cisco_xe', 'cisco-xe*'"
+    schema: errorCode_INVALID_PRODUCT_NAME_FORMAT
+    source_operations: ['GET /product']
+  - status: 406
+    error_code: INVALID_YEAR
+    title: Invalid year
+    description: Year should be in range 1995 to current year.
+    schema: errorCode_INVALID_YEAR
+    source_operations: ['GET /year/{year}']
+  - status: 406
+    error_code: INVALID_OS_TYPE
+    title: Invalid OS type
+    description: OS Type is invalid.
+    schema: errorCode_INVALID_OS_TYPE
+    source_operations: ['GET /OSType/{OSType}', 'GET /OS_version/OS_data']
+  - status: 406
+    error_code: INVALID_DATE_FORMAT
+    title: Invalid date format
+    description: 'Invalid date format, please enter date in yyyy-mm-dd format.'
+    schema: errorCode_INVALID_DATE_FORMAT
+  - status: 406
+    error_code: START_DATE_GREATER
+    title: Start date after end date
+    description: Start date should not be greater than end date.
+    schema: errorCode_START_DATE_GREATER
+  - status: 406
+    error_code: START_DATE_AND_END_DATE_MANDATORY
+    title: Date range incomplete
+    description: Start Date and End Date are mandatory.
+    schema: errorCode_START_DATE_AND_END_DATE_MANDATORY
+  - status: 406
+    error_code: VERSION_ID_IS_MANDATORY
+    title: Version id missing
+    description: Version ID is mandatory.
+    schema: errorCode_VERSION_ID_IS_MANDATORY
+  - status: 410
+    error_code: EndofLife
+    title: Endpoint obsolete
+    description: >-
+      "Endpoint containing /cvrf/ is now obsolete." Returned by all 10 /cvrf/*
+      operations, which are also marked deprecated:true. This is the strongest
+      machine-readable retirement signal in the contract — see
+      lifecycle/cisco-psirt-lifecycle.yml.
+    schema: EndofLife
+    source_operations:
+      - 'GET /cvrf/advisory/{advisoryId}'
+      - 'GET /cvrf/all'
+      - 'GET /cvrf/all/firstpublished'
+      - 'GET /cvrf/all/lastpublished'
+      - 'GET /cvrf/cve/{cve_id}'
+      - 'GET /cvrf/product'
+      - 'GET /cvrf/severity/{severity}'
+      - 'GET /cvrf/severity/{severity}/firstpublished'
+      - 'GET /cvrf/severity/{severity}/lastpublished'
+      - 'GET /cvrf/year/{year}'
+undocumented_in_spec:
+  - status: 401
+    note: >-
+      Not declared on any operation, but implied — every operation requires a
+      bearer token and Cisco's Mashery gateway rejects unauthenticated calls.
+  - status: 403
+    note: >-
+      OBSERVED, not documented: GET https://apix.cisco.com/security/advisories/v2/all
+      without a token returns HTTP 403 (probed 2026-08-19).
+  - status: 429
+    note: >-
+      Not declared anywhere, despite a published 5/sec, 30/min, 5000/day quota. An
+      agent has no documented signal for quota exhaustion. See
+      rate-limits/cisco-psirt-rate-limits.yml.
+  - status: 5xx
+    note: No 5xx responses are declared on any of the 30 operations.
+summary:
+  problem_count: 20
+  statuses: [404, 406, 410]
+  rfc9457: false
+  distinct_error_codes: 17

@@ -1,0 +1,166 @@
+generated: '2026-08-19'
+method: searched
+source: >-
+  https://developer.cisco.com/docs/psirt/ (Introduction + Authentication) and the
+  Cisco-published OpenAPI at
+  https://github.com/CiscoPSIRT/openVulnAPI/blob/master/swagger/openVulnAPIOAS_3_0_3.yaml
+description: >-
+  The openVuln API's lifecycle posture is unusual and worth reading carefully: Cisco
+  encodes deprecation IN THE CONTRACT rather than only in prose. The published
+  OpenAPI carries three tags — Current Endpoints, Sunset Endpoints and Obsolete
+  Endpoints — and every obsolete operation is marked deprecated:true with a 410 Gone
+  as its only documented response. That is a machine-readable retirement signal an
+  agent can act on without reading a policy page. What Cisco does NOT publish is a
+  dated changelog, a versioning policy page, an SLA, or a status page for this API.
+versioning:
+  scheme: uri-path-basepath
+  current: security/advisories/v2
+  previous: security/advisories
+  spec_version: 2.0.2
+  mechanism: >-
+    The version lives in the server basePath variable, which the OpenAPI declares
+    as an enum of exactly two values: "security/advisories" (v1, legacy) and
+    "security/advisories/v2" (current, default). There is no version header and no
+    date-pinned version train.
+  docs: https://developer.cisco.com/docs/psirt/
+  policy_page: null
+deprecation:
+  policy_url: null
+  policy_page_published: false
+  in_contract: true
+  sunset_header: false
+  deprecation_header: false
+  mechanism: >-
+    OpenAPI-native. Obsolete operations carry deprecated:true and document 410 Gone
+    as their only response. Sunset operations are grouped under a "Sunset Endpoints"
+    tag whose description states the migration requirement verbatim: 'The
+    "security/advisories" basepath will be deprecated in the future. These API
+    endpoints have changed with the introduction of v2 basepath. Migrate the below
+    endpoints to current endpoint calls. The below endpoints only work with
+    "security/advisories" basepath.' RFC 8594 Sunset / Deprecation response headers
+    are NOT used.
+  announced_retirements:
+    - subject: CVRF advisory format
+      detail: >-
+        "Cisco recommends focusing on CSAF as CVRF will be phased out for Cisco
+        advisories. ... Cisco will support CVRF until December 31, 2023."
+      date: '2023-12-31'
+      source: https://developer.cisco.com/docs/psirt/
+      replacement: CSAF (Common Security Advisory Framework)
+    - subject: api.cisco.com host for pre-March-2023 applications
+      detail: >-
+        The OpenAPI's own server description reads "OpenVuln API - Applications
+        created prior March 1, 2023; expires Sep 30, 2023". Applications registered
+        after March 2023 use apix.cisco.com.
+      date: '2023-09-30'
+      source: openapi/_original/cisco-psirt-openvuln-openapi.json
+      replacement: https://apix.cisco.com/security/advisories/v2
+    - subject: registered applications on the legacy API console
+      detail: >-
+        "IMPORTANT: Current registered applications will be deprecated in coming
+        months. Please migrate your applications to continue using API's."
+      date: null
+      source: https://developer.cisco.com/docs/psirt/authentication/
+  application_lifecycle: >-
+    Cisco reserves the right to remove End-of-Support software releases from the
+    Cisco Software Checker, which is subsequently reflected in this API's
+    version/platform responses.
+deprecated_operations:
+  - spec: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    path: '/cvrf/advisory/{advisoryId}'
+    method: get
+    response: 410
+  - spec: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    path: '/cvrf/all'
+    method: get
+    response: 410
+  - spec: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    path: '/cvrf/all/firstpublished'
+    method: get
+    response: 410
+  - spec: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    path: '/cvrf/all/lastpublished'
+    method: get
+    response: 410
+  - spec: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    path: '/cvrf/cve/{cve_id}'
+    method: get
+    response: 410
+  - spec: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    path: '/cvrf/product'
+    method: get
+    response: 410
+  - spec: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    path: '/cvrf/severity/{severity}'
+    method: get
+    response: 410
+  - spec: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    path: '/cvrf/severity/{severity}/firstpublished'
+    method: get
+    response: 410
+  - spec: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    path: '/cvrf/severity/{severity}/lastpublished'
+    method: get
+    response: 410
+  - spec: openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+    path: '/cvrf/year/{year}'
+    method: get
+    response: 410
+sunset_operations:
+  - spec: openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+    path: '/ios'
+    method: get
+  - spec: openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+    path: '/iosxe'
+    method: get
+  - spec: openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+    path: '/aci'
+    method: get
+  - spec: openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+    path: '/nxos'
+    method: get
+  - spec: openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+    path: '/nos_version/nos_data'
+    method: get
+sla:
+  url: null
+  uptime_target: null
+  note: Cisco publishes no SLA or uptime commitment for the openVuln API.
+status_page:
+  url: null
+  note: >-
+    NO status page covers this API. https://status.cisco.com/ answers 302 to
+    https://www.cisco.com/c/en/us/support/web/cloud-status.html, which is a
+    directory of per-product cloud status pages (and itself answers 403 to
+    automated clients); neither names the PSIRT openVuln API, developer.cisco.com,
+    api.cisco.com or apix.cisco.com. No StatusPage pointer is emitted, because
+    asserting one would credit Cisco with operational transparency this API does
+    not have.
+  evidence:
+    - url: 'https://status.cisco.com/'
+      status: 302
+      redirects_to: 'https://www.cisco.com/c/en/us/support/web/cloud-status.html'
+    - url: 'https://www.cisco.com/c/en/us/support/web/cloud-status.html'
+      status: 403
+changelog:
+  url: null
+  note: >-
+    No dated changelog or release-notes page exists for this API. Probed
+    developer.cisco.com/docs/psirt/{changelog,release-notes,whats-new,versioning}
+    — all 404. The nearest thing to a change record is the git history of
+    https://github.com/CiscoPSIRT/openVulnAPI (last substantive push 2025-04-18)
+    and the announcement mailing list openvuln-announce-join@cisco.com.
+  evidence:
+    - url: 'https://developer.cisco.com/docs/psirt/changelog/'
+      status: 404
+    - url: 'https://developer.cisco.com/docs/psirt/release-notes/'
+      status: 404
+    - url: 'https://developer.cisco.com/docs/psirt/whats-new/'
+      status: 404
+    - url: 'https://developer.cisco.com/docs/psirt/versioning/'
+      status: 404
+announcements:
+  mailing_list: openvuln-announce-join@cisco.com
+  subscribe: Send an email with "subscribe" in the subject line.
+  unsubscribe: openvuln-announce-leave@cisco.com
+  source: https://sec.cloudapps.cisco.com/security/center/resources/openvulnapi

@@ -1,0 +1,96 @@
+generated: '2026-08-19'
+method: searched
+source: https://developer.cisco.com/docs/psirt/authentication/
+derived_from: >-
+  openapi/cisco-psirt-current-endpoints-api-openapi.yml,
+  openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml,
+  openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+docs: https://developer.cisco.com/docs/psirt/authentication/
+description: >-
+  The OpenAPI declares only the WIRE format — HTTP bearer with a JWT. That is half
+  the contract. Cisco's authentication docs supply the other half: the token is an
+  OAuth 2.0 client-credentials access token minted by Cisco's Okta-backed identity
+  service at id.cisco.com, from a client_id/client_secret pair issued when you
+  register an application against this specific API in the Cisco API Console. The
+  spec cannot express that, so an integrator reading the spec alone would not know
+  where a token comes from.
+summary:
+  types: [http, oauth2]
+  http_schemes: [bearer]
+  bearer_format: JWT
+  oauth2_flows: [clientCredentials]
+  api_key_in: []
+  transport: HTTPS only — "All operations must communicate over a secure HTTPS connection."
+schemes:
+  - name: psirt_openvuln_api_auth
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
+    applied: global
+    sources:
+      - openapi/cisco-psirt-current-endpoints-api-openapi.yml
+      - openapi/cisco-psirt-obsolete-endpoints-api-openapi.yml
+      - openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+    note: >-
+      Declared in the spec and applied at the document level, so every one of the
+      30 operations requires it. The spec does not say the bearer is an OAuth2
+      access token; the docs do.
+  - name: cisco-oauth2-client-credentials
+    type: oauth2
+    flow: clientCredentials
+    tokenUrl: https://id.cisco.com/oauth2/default/v1/token
+    issuer: https://id.cisco.com/oauth2/default
+    audience: api://default
+    token_type: Bearer
+    expires_in: 3600
+    scopes:
+      customscope: >-
+        The only scope observed in Cisco's own published token response. Cisco does
+        not document a scope reference or per-endpoint scopes for this API.
+    source: https://developer.cisco.com/docs/psirt/authentication/
+    note: >-
+      Not in the OpenAPI. Captured from the docs, which publish the exact
+      client-credentials exchange. SEARCHED, not derived.
+registration:
+  console: https://apiconsole.cisco.com/
+  keys_page: https://apiconsole.cisco.com/apps/mykeys
+  identity: A Cisco.com ID is required; register one from the console if you have none.
+  steps:
+    - Log in to the Cisco API Console with a Cisco.com ID.
+    - Open "My Apps & Keys" and choose "Register a New App".
+    - Set Application Type to "Service".
+    - Set Grant Type to "Client Credentials".
+    - Select the "Cisco PSIRT openVuln API".
+    - Agree to the terms of service and register.
+    - Collect the resulting "Key" (client_id) and "Client Secret".
+  eligibility: >-
+    "The openVuln API is open to registered Cisco customers and partners."
+    (https://github.com/CiscoPSIRT/openVulnAPI/blob/master/README.md)
+  migration_notice: >-
+    "IMPORTANT: Current registered applications will be deprecated in coming
+    months. Please migrate your applications to continue using API's."
+token_exchange:
+  method: POST
+  url: https://id.cisco.com/oauth2/default/v1/token
+  content_type: application/x-www-form-urlencoded
+  parameters: [client_id, client_secret, grant_type=client_credentials]
+  client_authentication: >-
+    Credentials in the form body, or as an HTTP Basic header (Cisco's Postman
+    walkthrough sets "Client Authentication: Send as Basic Auth Header").
+  response_fields: [token_type, expires_in, access_token, scope]
+  lifetime_seconds: 3600
+  refresh: >-
+    No refresh token is issued. Client-credentials tokens are re-minted on expiry;
+    Cisco's own openVulnQuery client regenerates the token on every call.
+request_usage:
+  header: 'Authorization: Bearer <access_token>'
+  accept: 'application/json (or application/xml — the API serves .json and .xml)'
+  example_base: https://apix.cisco.com/security/advisories/v2
+gateway:
+  vendor: Mashery
+  evidence: >-
+    api.cisco.com and apix.cisco.com both return "Server: Mashery Proxy". An
+    unauthenticated GET on a real path
+    (https://apix.cisco.com/security/advisories/v2/all) returns 403; unrouted paths
+    return 504. HEAD is not supported (596).
+unauthenticated_access: false

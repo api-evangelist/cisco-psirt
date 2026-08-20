@@ -1,0 +1,45 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Cisco PSIRT openVuln API (sunset endpoints api)
+  version: 1.0.0
+extends: openapi/cisco-psirt-sunset-endpoints-api-openapi.yml
+x-generated: '2026-08-19'
+x-method: generated
+x-source: Derived from openapi/cisco-psirt-sunset-endpoints-api-openapi.yml. Proposes an operationId for every operation
+  Cisco left unnamed, and links the derived API Evangelist artifacts.
+x-operation-ids-proposed: 5
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/providers/cisco-psirt/
+    x-apievangelist-artifacts:
+      authentication: authentication/cisco-psirt-authentication.yml
+      conventions: conventions/cisco-psirt-conventions.yml
+      errors: errors/cisco-psirt-problem-types.yml
+      error_codes: errors/cisco-psirt-error-codes.yml
+      lifecycle: lifecycle/cisco-psirt-lifecycle.yml
+      rate_limits: rate-limits/cisco-psirt-rate-limits.yml
+      data_model: data-model/cisco-psirt-data-model.yml
+      scopes: scopes/cisco-psirt-scopes.yml
+    x-apievangelist-note: Enhancements only. The Cisco-published contract is unmodified; apply this overlay to add
+      them.
+- target: $.paths['/ios'].get
+  update:
+    operationId: getIos
+    summary: Used to obtain all advisories that affects the given ios version
+- target: $.paths['/iosxe'].get
+  update:
+    operationId: getIosxe
+    summary: Used to obtain all advisories that affects the given ios-xe version
+- target: $.paths['/aci'].get
+  update:
+    operationId: getAci
+    summary: Used to obtain all advisories that affects the given aci version
+- target: $.paths['/nxos'].get
+  update:
+    operationId: getNxos
+    summary: Used to obtain all advisories that affects the given nxos version
+- target: $.paths['/nos_version/nos_data'].get
+  update:
+    operationId: getNosVersionNosData
+    summary: To obtain version information regarding the different Network Operating Systems

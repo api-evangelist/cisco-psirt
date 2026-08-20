@@ -1,0 +1,39 @@
+generated: '2026-08-19'
+method: searched
+source: >-
+  https://developer.cisco.com/psirt/ and
+  https://github.com/CiscoPSIRT/openVulnAPI/blob/master/README.md — searched for a
+  pricing, plans or tier page on the developer portal, the API console and the
+  Cisco Security Center resource page. None exists.
+plan_count: 0
+description: >-
+  Cisco publishes no pricing, plans or tiers for the PSIRT openVuln API. There is
+  no paid tier, no free-tier page, and no "contact sales" gate. Access is granted
+  by identity, not by plan: Cisco's own README states "The openVuln API is open to
+  registered Cisco customers and partners", and entitlement is obtained by
+  registering an application at the Cisco API Console with a Cisco.com ID. The only
+  quantitative limit attached to an account is the rate quota, which is uniform
+  rather than tiered — see rate-limits/cisco-psirt-rate-limits.yml.
+plans: []
+access_model:
+  type: registration-gated
+  cost: not published
+  eligibility: >-
+    "The openVuln API is open to registered Cisco customers and partners."
+    (https://github.com/CiscoPSIRT/openVulnAPI/blob/master/README.md)
+  signup: https://apiconsole.cisco.com/
+  signup_steps: >-
+    Sign in with a Cisco.com ID → My Apps & Keys → Register a New App →
+    Application Type "Service", Grant Type "Client Credentials", select
+    "Cisco PSIRT openVuln API", accept the terms → receive Key + Client Secret.
+  quota: rate-limits/cisco-psirt-rate-limits.yml
+evidence:
+  - url: https://developer.cisco.com/psirt/
+    status: 200
+    finding: developer portal for the API; no pricing or plans section
+  - url: https://apiconsole.cisco.com/
+    status: 200
+    finding: application registration console; no plan selection, no price
+  - url: https://sec.cloudapps.cisco.com/security/center/resources/openvulnapi
+    status: 200
+    finding: publishes the rate quota; no pricing

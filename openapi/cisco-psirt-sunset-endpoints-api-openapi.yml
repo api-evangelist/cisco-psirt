@@ -1,0 +1,466 @@
+openapi: 3.2.0
+info:
+  version: 2.0.2
+  title: Cisco PSIRT openVuln Sunset Endpoints API
+  description: 'The Cisco Product Security Incident Response Team (PSIRT) openVuln API is a RESTful API that allows customers to obtain Cisco Security Vulnerability information in different machine-consumable formats. APIs are important for customers because they allow their technical staff and programmers to build tools that help them do their job more effectively (in this case, to keep up with security vulnerability information).
+
+    For more information about the Cisco PSIRT openVuln API visit https://developer.cisco.com/psirt/
+
+    For detail steps on how to use the API go to: https://developer.cisco.com/docs/psirt/
+
+    '
+  termsOfService: https://github.com/CiscoPSIRT/openVulnAPI/blob/master/LICENSE.md
+  contact:
+    name: Cisco PSIRT
+    url: https://tools.cisco.com/security/center/publicationListing.x
+    email: openvuln@cisco.com
+  x-provenance:
+    method: harvested
+    authored_by: Cisco PSIRT
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    note: Published by Cisco. Retrieved unmodified except for this x-provenance block.
+    provider_published: true
+  x-evidence:
+  - type: source
+    url: https://github.com/CiscoPSIRT/openVulnAPI/blob/master/swagger/openVulnAPIOAS_3_0_3.yaml
+  - type: raw
+    url: https://raw.githubusercontent.com/CiscoPSIRT/openVulnAPI/master/swagger/openVulnAPIOAS_3_0_3.yaml
+servers:
+- url: https://api.cisco.com/{basePath}
+  description: OpenVuln API - Applications created prior March 1, 2023; expires Sep 30, 2023
+  variables:
+    basePath:
+      default: security/advisories/v2
+      enum:
+      - security/advisories
+      - security/advisories/v2
+- url: https://apix.cisco.com/{basePath}
+  description: OpenVuln API - Applications created post March 1, 2023
+  variables:
+    basePath:
+      default: security/advisories/v2
+      enum:
+      - security/advisories
+      - security/advisories/v2
+security:
+- psirt_openvuln_api_auth: []
+tags:
+- name: Sunset Endpoints
+  description: The "security/advisories" basepath will be deprecated in the future. These API endpoints have changed with the introduction of v2 basepath.  Migrate the below endpoints to current endpoint calls. The below endpoints only work with "security/advisories" basepath.
+paths:
+  /ios:
+    get:
+      description: Used to obtain all advisories that affects the given ios version.
+      tags:
+      - Sunset Endpoints
+      parameters:
+      - in: query
+        name: version
+        description: IOS version to obtain security advisories
+        required: true
+        schema:
+          type: string
+          format: string
+      - in: query
+        name: advisoryId
+        description: Enter advisory ID for individual advisory.
+        required: false
+        schema:
+          type: string
+          format: cisco-sa-XXX
+      - in: query
+        name: summaryDetails
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: productNames
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: pageIndex
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: pageSize
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Advisories'
+                - $ref: '#/components/schemas/AdvisoriesErrors'
+            application/xml:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Advisories'
+                - $ref: '#/components/schemas/AdvisoriesErrors'
+  /iosxe:
+    get:
+      description: Used to obtain all advisories that affects the given ios-xe version.
+      tags:
+      - Sunset Endpoints
+      parameters:
+      - in: query
+        name: version
+        description: IOS-XE version to obtain security advisories
+        required: true
+        schema:
+          type: string
+          format: string
+      - in: query
+        name: advisoryId
+        description: Enter advisory ID for individual advisory.
+        required: false
+        schema:
+          type: string
+          format: cisco-sa-XXX
+      - in: query
+        name: summaryDetails
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: productNames
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: pageIndex
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: pageSize
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Advisories'
+                - $ref: '#/components/schemas/AdvisoriesErrors'
+            application/xml:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Advisories'
+                - $ref: '#/components/schemas/AdvisoriesErrors'
+  /aci:
+    get:
+      description: Used to obtain all advisories that affects the given aci version.
+      tags:
+      - Sunset Endpoints
+      parameters:
+      - in: query
+        name: version
+        description: ACI version to obtain security advisories
+        required: true
+        schema:
+          type: string
+          format: string
+      - in: query
+        name: advisoryId
+        description: Enter advisory ID for individual advisory.
+        required: false
+        schema:
+          type: string
+          format: cisco-sa-XXX
+      - in: query
+        name: summaryDetails
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: productNames
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: pageIndex
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: pageSize
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Advisories'
+                - $ref: '#/components/schemas/AdvisoriesErrors'
+            application/xml:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Advisories'
+                - $ref: '#/components/schemas/AdvisoriesErrors'
+  /nxos:
+    get:
+      description: Used to obtain all advisories that affects the given nxos version.
+      tags:
+      - Sunset Endpoints
+      parameters:
+      - in: query
+        name: version
+        description: NXOS version to obtain security advisories
+        required: true
+        schema:
+          type: string
+          format: string
+      - in: query
+        name: platformAlias
+        description: The Platform Alias to query by
+        required: false
+        schema:
+          $ref: '#/components/schemas/PlatformAliases'
+        explode: false
+      - in: query
+        name: advisoryId
+        description: Enter advisory ID for individual advisory.
+        required: false
+        schema:
+          type: string
+          format: cisco-sa-XXX
+      - in: query
+        name: summaryDetails
+        description: Include the Advisory Summary Description or not
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: productNames
+        description: Include the ProductNames or not
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: pageIndex
+        description: The pageIndex field is an integer representing the current page index out of total number of pages
+        required: false
+        schema:
+          type: integer
+      - in: query
+        name: pageSize
+        description: The pageSize field is an integer representing the maximum number of items requested by the client for the current page. The maximum pageSize limit is 100.
+        required: false
+        schema:
+          type: integer
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Advisories'
+                - $ref: '#/components/schemas/AdvisoriesErrors'
+            application/xml:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Advisories'
+                - $ref: '#/components/schemas/AdvisoriesErrors'
+  /nos_version/nos_data:
+    get:
+      description: To obtain version information regarding the different Network Operating Systems
+      tags:
+      - Sunset Endpoints
+      parameters:
+      - name: nos_type
+        in: query
+        description: The type of Network Operating System to Query
+        required: true
+        schema:
+          $ref: '#/components/schemas/OSTypes'
+        explode: false
+      security:
+      - psirt_openvuln_api_auth:
+        - read:advisories
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OSData'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OSData'
+components:
+  schemas:
+    PlatformAliases:
+      description: List of supported Platform Aliases
+      type: array
+      items:
+        type: string
+        enum:
+        - ASA5500
+        - ASA5500X
+        - ASASM
+        - ASAV
+        - FPR1000
+        - FPR2100
+        - FPR4100
+        - FPR9000
+        - FPRNGFW
+        - FWL3100
+        - ISA3000
+        - MDS9000
+        - NEXUS1000V
+        - NEXUS3000
+        - NEXUS5000
+        - NEXUS6000
+        - NEXUS7000
+        - NEXUS9000
+    OSTypes:
+      description: List of supported Network Operating Systems
+      type: array
+      items:
+        type: string
+        enum:
+        - aci
+        - ios
+        - iosxe
+        - nxos
+        - asa
+        - ftd
+        - fmc
+        - fxos
+    Advisories:
+      description: Successful pull of advisory information
+      properties:
+        advisoryId:
+          type: string
+          example: cisco-sa-lsplus-Z6AQEOjk
+        advisoryTitle:
+          type: string
+          example: Cisco IOS XR Software for ASR 9000 Series Routers Lightspeed-Plus Line Cards Denial of Service Vulnerability
+        bugIDs:
+          type: string
+          example: CSCvy48962
+        ipsSignatures:
+          type: string
+          example: NA
+        cves:
+          type: string
+          example: CVE-2022-20714
+        cvrfUrl:
+          type: string
+          example: https://tools.cisco.com/security/center/contentxml/CiscoSecurityAdvisory/cisco-sa-lsplus-Z6AQEOjk/cvrf/cisco-sa-lsplus-Z6AQEOjk_cvrf.xml
+        csafUrl:
+          type: string
+          example: https://tools.cisco.com/security/center/contentjson/CiscoSecurityAdvisory/cisco-sa-lsplus-Z6AQEOjk/csaf/cisco-sa-lsplus-Z6AQEOjk_csaf.json
+        cvssBaseScore:
+          type: number
+          example: 8.6
+        cwe:
+          type: string
+          example: CWE-12
+        firstPublished:
+          type: string
+          format: date-time
+          example: '2022-04-13T23:00:00'
+        lastUpdated:
+          type: string
+          format: date-time
+          example: '2022-04-29T04:28:53'
+        status:
+          type: string
+          example: Final
+        version:
+          type: number
+          example: 1.1
+        productNames:
+          type: string
+          example: Cisco IOS XR Software
+        publicationUrl:
+          type: string
+          example: https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-lsplus-Z6AQEOjk
+        sir:
+          type: string
+          example: High
+        summary:
+          type: string
+          example: \r\n<p>A vulnerability in the data plane microcode of Lightspeed-Plus line cards for <span class=\"mce-annotation tox-comment\" data-mce-annotation-uid=\"CONV-0005559\" data-mce-annotation=\"tinycomments\">Cisco&nbsp;ASR 9000 Series Aggregation Services Routers</span>,&nbsp;ASR 9902 Compact High-Performance Routers, and ASR 9903 Compact High-Performance Routers could allow an unauthenticated, remote attacker to cause the line card to reset.</p>...
+    OSData:
+      description: Data Query informs of version and platform information.
+      properties:
+        nos_type:
+          type: string
+          example: NXOS
+        nos_version:
+          type: string
+          example: 7.0(3)F1(1)
+        platform_name:
+          type: string
+          example: Cisco Nexus 9000 Series Switches (Returned for - nxos)
+    AdvisoriesErrors:
+      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
+      properties:
+        errorCode:
+          type: string
+          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
+        errorMessage:
+          type: string
+          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
+  securitySchemes:
+    psirt_openvuln_api_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+externalDocs:
+  description: Read the formal Documentation here
+  url: https://developer.cisco.com/docs/psirt/

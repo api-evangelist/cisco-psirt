@@ -1,0 +1,63 @@
+generated: '2026-08-19'
+method: searched
+source: https://sec.cloudapps.cisco.com/security/center/resources/openvulnapi
+description: >-
+  Cisco publishes a single hard quota for the PSIRT openVuln API, applied per
+  registered application (the client_id issued at apiconsole.cisco.com). It is a
+  three-window combination — a per-second burst ceiling, a per-minute ceiling and a
+  daily cap — and Cisco's own FAQ points applicants at caching rather than at a
+  quota-increase form.
+docs: https://developer.cisco.com/docs/psirt/faq/
+limit_count: 3
+rate_limits:
+  - scope: per-application
+    window: 1s
+    limit: 5
+    unit: calls
+    source: https://sec.cloudapps.cisco.com/security/center/resources/openvulnapi
+  - scope: per-application
+    window: 1m
+    limit: 30
+    unit: calls
+    source: https://sec.cloudapps.cisco.com/security/center/resources/openvulnapi
+  - scope: per-application
+    window: 1d
+    limit: 5000
+    unit: calls
+    source: https://sec.cloudapps.cisco.com/security/center/resources/openvulnapi
+per_app_dashboard: https://apiconsole.cisco.com/apps/mykeys
+per_app_dashboard_note: >-
+  Cisco's own client README states "The openVuln API rate limits are shown in the
+  https://apiconsole.cisco.com/apps/mykeys" — the authoritative quota for a given
+  application is the one displayed against that application's key, behind a
+  Cisco.com login.
+response_headers:
+  documented: false
+  observed: []
+  note: >-
+    Cisco documents no RateLimit-* / X-RateLimit-* response headers and no
+    Retry-After contract for this API, and the runtime signal cannot be observed
+    anonymously — api.cisco.com and apix.cisco.com are fronted by a Mashery proxy
+    that answers 403 to an unauthenticated GET on a real path
+    (https://apix.cisco.com/security/advisories/v2/all -> 403), so no successful
+    response could be inspected for headers. An agent therefore has no runtime
+    signal for remaining quota; it has only the published numbers above and must
+    do its own accounting.
+exhaustion:
+  status_code: null
+  note: >-
+    Not documented. Cisco's FAQ answer to "Can I get my applications API rates
+    increased?" recommends "following best practices for rate-limiting and using
+    local caching of data to prevent multiple repeated calls" rather than naming a
+    429 response or a Retry-After header.
+client_side_enforcement:
+  - name: openVulnQuery
+    note: Cisco's own Python client documents client-side rate limiting to stay under the quota.
+    source: https://github.com/CiscoPSIRT/openVulnQuery
+increase_process:
+  documented: true
+  url: https://developer.cisco.com/docs/psirt/faq/
+  detail: >-
+    "Cisco PSIRT OpenVuln API team would like to understand your requirements. We
+    recommend following best practices for rate-limiting and using local caching of
+    data to prevent multiple repeated calls to the Cisco PSIRT OpenVuln API."

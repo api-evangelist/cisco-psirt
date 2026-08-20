@@ -1,0 +1,159 @@
+generated: '2026-08-19'
+method: searched
+source: https://github.com/CiscoPSIRT/openVulnQuery/blob/main/README.md
+description: >-
+  openVulnQuery is Cisco's first-party command-line client for the PSIRT openVuln
+  API, published from the CiscoPSIRT GitHub organization and distributed on PyPI.
+  It is a single command with one required "API filter" flag that selects an
+  openVuln endpoint, plus optional field-projection, date-range, output-format and
+  count flags. Cisco labels it "Community-Supported" in the openVulnAPI README.
+name: openVulnQuery
+binary: openVulnQuery
+language: python
+repo: https://github.com/CiscoPSIRT/openVulnQuery
+package: packages/cisco-psirt-packages.yml
+install:
+  - method: pip
+    command: pip3 install openVulnQuery
+  - method: pip-pinned
+    command: python3 -m pip install openVulnQuery==1.31
+    note: The repo README still recommends pinning 1.31; PyPI's latest is 1.34 (2023-08-06).
+  - method: source
+    command: python main.py --config PathToCredentialsFile ...
+    note: Run from the checkout when not installed via pip.
+authentication:
+  scheme: oauth2-client-credentials
+  detail: >-
+    Credentials come from https://apiconsole.cisco.com/ (My Applications → Register
+    a New Application, Application Type "Service", Grant Type "Client Credentials",
+    API "Cisco PSIRT openVuln API"). The CLI reads them from --config <file.json>
+    (keys CLIENT_ID / CLIENT_SECRET), then from the CLIENT_ID / CLIENT_SECRET
+    environment variables, then from config.py. The OAuth2 token is regenerated on
+    every call.
+  reference: authentication/cisco-psirt-authentication.yml
+usage: >-
+  openVulnQuery --config PathToCredentialsFile <API filter> [parsing fields]
+  [output format] [-c]
+command_groups:
+  - group: api-filters
+    required: true
+    description: One filter selects which openVuln endpoint is called.
+    commands:
+      - flag: --all
+        description: Return all advisories.
+        api_path: /all
+      - flag: --advisory
+        description: Search by a specific Cisco advisory id.
+        api_path: /advisory/{advisoryId}
+        example: openVulnQuery --advisory cisco-sa-20110201-webex
+      - flag: --bugid
+        description: Search by a specific Cisco Bug id.
+        api_path: /bugid/{bug_id}
+        example: openVulnQuery --bugid CSCwb92675
+      - flag: --cve
+        description: Search by a specific CVE id.
+        api_path: /cve/{cve_id}
+        example: openVulnQuery --cve CVE-2010-3043
+      - flag: --latest
+        description: Search by the last N advisories published (max 100).
+        api_path: /latest/{number}
+        example: openVulnQuery --latest 10
+      - flag: --severity
+        description: Search by security impact rating (low, medium, high, critical).
+        api_path: /severity/{severity}
+        example: openVulnQuery --severity critical
+      - flag: --year
+        description: Search by year, 1995 to present.
+        api_path: /year/{year}
+        example: openVulnQuery --year 2016
+      - flag: --product
+        description: Search by product name.
+        api_path: /product
+        example: openVulnQuery --product Cisco
+  - group: software-checker
+    description: >-
+      Cisco Software Checker integration — query advisories affecting one specific
+      software release. These map onto the openVuln OS/version endpoints.
+    commands:
+      - flag: --ios
+        description: Cisco IOS release.
+        example: openVulnQuery --ios 15.6\(2\)SP
+      - flag: --ios_xe
+        description: Cisco IOS XE release.
+        example: openVulnQuery --ios_xe 3.16.1S
+      - flag: --nxos
+        description: Cisco NX-OS (standalone mode) release.
+        example: openVulnQuery --nxos 8.3(1)
+      - flag: --aci
+        description: Cisco NX-OS (ACI mode) release.
+        example: openVulnQuery --aci 11.0(2j)
+      - flag: --asa
+        description: Cisco ASA release.
+        example: openVulnQuery --asa 9.18.1
+      - flag: --fmc
+        description: Cisco FMC release.
+        example: openVulnQuery --fmc 7.0.1
+      - flag: --ftd
+        description: Cisco FTD release.
+        example: openVulnQuery --ftd 7.0.1
+      - flag: --fxos
+        description: Cisco FXOS release.
+        example: openVulnQuery --fxos 2.6.1.131
+      - flag: --OS
+        description: Version information for a network operating system.
+        api_path: /OS_version/OS_data
+        example: openVulnQuery --OS ios
+      - flag: --platform
+        description: Platform alias information for a network operating system.
+        api_path: /platforms
+        example: openVulnQuery --platform nxos
+  - group: filters-and-projection
+    description: Narrow the result set and choose which advisory fields are printed.
+    commands:
+      - flag: -f, --fields
+        description: >-
+          Space-separated list of fields to project. Available: advisory_id, sir,
+          first_published, last_updated, cves, bug_ids, cvss_base_score,
+          advisory_title, publication_url, cwe, product_names, summary, vuln_title,
+          cvrf_url, csafUrl. Fields with no data render as NA.
+      - flag: --first_published
+        description: Date range filter, YYYY-MM-DD:YYYY-MM-DD.
+        example: openVulnQuery --severity critical --first_published 2015-01-02:2015-01-04
+      - flag: --last_updated
+        description: Date range filter, YYYY-MM-DD:YYYY-MM-DD.
+        example: openVulnQuery --severity high --last_updated 2016-01-02:2016-04-02
+      - flag: --user-agent
+        description: Value sent as the User-Agent request header. Default TestApp.
+  - group: output
+    description: Output format and counting.
+    commands:
+      - flag: (default)
+        description: Table printed to the terminal.
+      - flag: --json <path>
+        description: Write results as JSON to the given file path.
+      - flag: --csv <path>
+        description: Write results as CSV to the given file path.
+      - flag: -c
+        description: >-
+          Print a count of the fields given with -f/--fields (or of the base API
+          fields when none are given).
+  - group: configuration
+    commands:
+      - flag: --config FILE
+        description: >-
+          Path to a JSON file holding CLIENT_ID and CLIENT_SECRET. Falls back to the
+          CLIENT_ID / CLIENT_SECRET environment variables, then config.py.
+key_flows:
+  - name: Triage the newest critical advisories
+    command: openVulnQuery --severity critical -f advisory_id sir cves cvss_base_score csafUrl
+  - name: Check whether a specific software release is affected
+    command: openVulnQuery --ios_xe 3.16.1S -f advisory_id advisory_title cves
+  - name: Bulk-export a year of advisories for offline analysis
+    command: openVulnQuery --year 2016 --json /tmp/2016-advisories.json
+caveats:
+  - >-
+    Cisco reserves the right to remove End-of-Support releases from the Cisco
+    Software Checker, which is subsequently reflected in this API.
+  - >-
+    The CLI's last PyPI release is 1.34 (2023-08-06) even though the repo was still
+    receiving commits in November 2025 — see packages/cisco-psirt-packages.yml.

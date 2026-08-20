@@ -1,0 +1,87 @@
+generated: '2026-08-19'
+method: searched
+source: >-
+  https://pypi.org/pypi/openVulnQuery/json (registry metadata, fetched 2026-08-19)
+  and https://github.com/CiscoPSIRT/openVulnQuery — the client Cisco links from
+  the openVuln API README at https://github.com/CiscoPSIRT/openVulnAPI.
+description: >-
+  Cisco ships exactly one client library for the PSIRT openVuln API: openVulnQuery,
+  a Python module + CLI published from Cisco's own CiscoPSIRT GitHub organization.
+  No JavaScript, Ruby, Go, Java, PHP, .NET or Rust package exists on any registry —
+  the openVulnAPI repo carries hand-written example_code/ for Go, JavaScript, PHP
+  and Ruby (Swagger-generated stubs, never published to a registry), which is a
+  sample-code surface, not a distributed SDK.
+packages:
+  - language: python
+    registry: pypi
+    name: OpenVulnQuery
+    url: https://pypi.org/project/OpenVulnQuery/
+    source: https://github.com/CiscoPSIRT/openVulnQuery
+    install: pip3 install openVulnQuery
+    official: true
+    version: '1.34'
+    published: '2023-08-06'
+    license: MIT
+    note: >-
+      Published in Cisco's own CiscoPSIRT GitHub org and linked from Cisco's API
+      README, so first-party by distribution — but Cisco labels it
+      "Community-Supported" in that README and does not promise support. DECAY
+      SIGNAL: the last PyPI release is 1.34 (2023-08-06), while the source repo was
+      still being pushed to on 2025-11-09 — over two years of committed work that
+      has never reached the registry a consumer installs from. The repo README
+      still tells users to pin "the latest version (1.31)".
+  - language: python
+    registry: pypi
+    name: openVulnQuery
+    url: https://pypi.org/project/openVulnQuery/
+    official: true
+    version: '1.34'
+    published: '2023-08-06'
+    note: >-
+      Same distribution — PyPI normalises the name, so openVulnQuery and
+      OpenVulnQuery resolve to one project. Recorded once here for the
+      case-sensitive install string Cisco publishes (pip3 install openVulnQuery).
+    alias_of: OpenVulnQuery
+registries_checked:
+  - registry: pypi
+    query: openVulnQuery
+    status: 200
+    result: found
+  - registry: npm
+    query: openvulnquery
+    status: 404
+    result: absent
+  - registry: npm
+    query: cisco-openvuln
+    status: 404
+    result: absent
+  - registry: rubygems
+    query: openvulnquery
+    status: 404
+    result: absent
+  - registry: crates.io
+    query: openvulnquery
+    status: 403
+    result: unreadable
+    note: crates.io returns 403 to automated clients; no crate is referenced by Cisco's docs or repos.
+sample_code_only:
+  - language: go
+    url: https://github.com/CiscoPSIRT/openVulnAPI/tree/master/example_code/go_examples
+    published_package: false
+  - language: javascript
+    url: https://github.com/CiscoPSIRT/openVulnAPI/tree/master/example_code/javascript_examples
+    published_package: false
+  - language: php
+    url: https://github.com/CiscoPSIRT/openVulnAPI/tree/master/example_code/php_examples
+    published_package: false
+  - language: ruby
+    url: https://github.com/CiscoPSIRT/openVulnAPI/tree/master/example_code/ruby_examples
+    published_package: false
+  - language: shell
+    url: https://github.com/CiscoPSIRT/openVulnAPI/tree/master/example_code/curl_examples
+    published_package: false
+summary:
+  official_count: 1
+  languages: [python]
+  registries: [pypi]
+  latest_release: '2023-08-06'

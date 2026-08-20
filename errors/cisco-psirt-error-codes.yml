@@ -1,0 +1,102 @@
+generated: '2026-08-19'
+method: searched
+source: https://github.com/CiscoPSIRT/openVulnAPI/blob/master/error_codes.md
+description: >-
+  Cisco publishes a standalone error-code reference for the openVuln API in its own
+  repository, scenario-first: each entry names the resource URIs it applies to, the
+  condition that triggers it, and the literal XML body returned. This is the
+  non-payments sibling of a decline-code registry and the human-readable
+  counterpart to errors/cisco-psirt-problem-types.yml, which is derived from the
+  OpenAPI. Where the two disagree, the OpenAPI is newer (it covers the v2 basepath
+  and the 410 retirements); the reference still documents /cvrf/ and /oval/ URIs.
+envelope_field: errorCode
+envelope_message_field: errorMessage
+error_codes:
+  - code: ADVISORYID_NOT_FOUND
+    message: Advisory-id not found
+    scenario: advisoryId is not found.
+    resource_uris: ['cvrf/advisory/{advisoryId}', '/oval/advisory/{advisoryId}']
+    action: Verify the advisory id at https://www.cisco.com/go/psirt before retrying; do not retry unchanged.
+  - code: INVALID_EXTENSION
+    message: 'Not supported extension type. Supported extension types are .json and .xml'
+    scenario: The extension entered is not a valid extension.
+    resource_uris: ['all']
+    applies_to: all resource URIs
+    action: Request .json or .xml only.
+  - code: INVALID_PAGEINDEX
+    message: Incorrect page index value
+    scenario: Page index is not a valid index.
+    resource_uris: ['all']
+    applies_to: all resource URIs
+    action: Use an integer page index within 1-100.
+  - code: MIN_PAGESIZE, MAX_PAGESIZE
+    message: 'Incorrect page size. Minimum page size value = 1 and Maximum page size = 100'
+    scenario: Page size is not valid.
+    resource_uris: ['all']
+    applies_to: all resource URIs
+    action: Clamp pageSize to 1-100.
+  - code: NO_DATA_FOUND
+    message: No data found
+    scenario: The severity (security impact rating) is not found.
+    resource_uris: ['/cvrf/severity/{severity}', '/oval/severity/{severity}']
+    action: >-
+      Treat as an empty result, not a failure. Do not retry — the query succeeded
+      and matched nothing.
+  - code: NO_DATA_FOUND
+    message: CVE_ID not found
+    scenario: The CVE id is not found in the database.
+    resource_uris: ['/cvrf/cve/{cveId}', '/oval/cve/{cveId}']
+    action: >-
+      Means Cisco has no advisory for that CVE — NOT that the CVE does not exist.
+      A negative answer, and a legitimate one to cache.
+  - code: INVALID_YEAR
+    message: Year should be in range 1995 to current year
+    scenario: Year must be between 1995 and the current year.
+    resource_uris: ['/cvrf/year/{year}', '/oval/year/{year}']
+    action: Clamp the year; 1995 is the start of the corpus.
+  - code: NO_DATA_FOUND
+    message: No data found
+    scenario: No advisory found for the given year.
+    resource_uris: ['/cvrf/year/{year}', '/oval/year/{year}']
+    action: Treat as an empty result.
+  - code: MIN_ADV_COUNT, MAX_ADV_COUNT
+    message: 'Minimum latest advisories count is 1,Maximum latest advisories count is 100'
+    scenario: The latest count is invalid; it must be between 1 and 100.
+    resource_uris: ['/cvrf/latest/{advCount}', '/oval/latest/{advCount}']
+    action: Clamp the count to 1-100 and page instead of asking for more.
+additional_codes_from_spec:
+  note: >-
+    The OpenAPI declares these codes which the published error_codes.md reference
+    does not cover. Full detail in errors/cisco-psirt-problem-types.yml.
+  codes:
+    - INVALID_SEVERITY
+    - PRODUCT_NOT_FOUND
+    - INVALID_PRODUCT_NAME_FORMAT
+    - OS_TYPE_NOT_FOUND
+    - INVALID_OS_TYPE
+    - INVALID_DATE_FORMAT
+    - START_DATE_GREATER
+    - START_DATE_AND_END_DATE_MANDATORY
+    - VERSION_ID_IS_MANDATORY
+    - INVALID_ADV_COUNT
+    - EndofLife
+    - NO_IOS_AFFECTING_ADVISORIES_FOUND
+    - INVALID_IOS_VERSION
+agent_guidance:
+  branch_on: errorCode
+  reason: >-
+    HTTP status is not sufficient. A 404 on this API means any of six different
+    things — bad advisory id, unknown CVE, empty result set, unknown product,
+    unknown OS type, or (by Cisco's own admission) a bad file extension that should
+    have been a 406. Only errorCode disambiguates them.
+  do_not_retry: [ADVISORYID_NOT_FOUND, NO_DATA_FOUND, INVALID_YEAR, INVALID_SEVERITY, INVALID_EXTENSION, INVALID_PAGEINDEX, EndofLife]
+  empty_result_not_failure: [NO_DATA_FOUND, PRODUCT_NOT_FOUND, OS_TYPE_NOT_FOUND]
+  retryable: []
+  retry_note: >-
+    Nothing in the published catalogue is retryable. There is no documented 429 or
+    5xx, so an agent hitting the 5/sec quota is in undocumented territory and should
+    back off on any unexpected status.
+summary:
+  documented_count: 9
+  spec_only_count: 13
+  reference_covers_v1_uris: true
