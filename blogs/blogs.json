@@ -1,0 +1,11 @@
+{
+  "repo": "cisco-psirt",
+  "feeds": [
+    {
+      "source": "https://developer.cisco.com/site/support/",
+      "error": "HTTPError"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-08-22T20:20:02Z"
+}
