@@ -7,6 +7,18 @@ description: The Cisco Product Security Incident Response Team (PSIRT) openVuln 
   published in the CiscoPSIRT GitHub organization.
 url: https://raw.githubusercontent.com/api-evangelist/cisco-psirt/refs/heads/main/apis.yml
 type: Index
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cisco.png
 access: 3rd-Party
 position: Consumer
