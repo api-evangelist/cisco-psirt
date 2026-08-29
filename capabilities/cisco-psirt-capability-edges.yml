@@ -1,0 +1,45 @@
+slug: cisco-psirt
+provider: Cisco PSIRT openVuln API
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Telecommunications
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Current Endpoints
+  spec_file: cisco-psirt-current-endpoints-api-openapi.yml
+  capability_id: BC-620.40
+  capability_id_l1: BC-620
+  capability_name: Vulnerability Management
+  confidence: 0.9
+  evidence: allows customers to obtain Cisco Security Vulnerability information in different machine-consumable
+    formats; GET /cve/{cve_id}; GET /severity/{severity}
+  reason: Machine-readable security advisory and CVE lookup feed used to track product vulnerabilities
+    by severity and affected product — a Vulnerability Management surface.
+- tag: Obsolete Endpoints
+  spec_file: cisco-psirt-obsolete-endpoints-api-openapi.yml
+  capability_id: BC-620.40
+  capability_id_l1: BC-620
+  capability_name: Vulnerability Management
+  confidence: 0.75
+  evidence: GET /cvrf/cve/{cve_id}; GET /cvrf/severity/{severity}; obtain Cisco Security Vulnerability
+    information
+  reason: Deprecated CVRF variants of the same advisory/CVE retrieval surface; still delivers vulnerability
+    disclosure data. Confidence reduced because the tag denotes a retired endpoint set rather than a live
+    capability.
+- tag: Sunset Endpoints
+  spec_file: cisco-psirt-sunset-endpoints-api-openapi.yml
+  capability_id: BC-620.40
+  capability_id_l1: BC-620
+  capability_name: Vulnerability Management
+  confidence: 0.7
+  evidence: 'GET /ios, GET /iosxe, GET /nxos; schemas: OSTypes, OSData, Advisories'
+  reason: Queries security advisories affecting specific network OS releases (Advisories schema), i.e.
+    vulnerability exposure lookup by platform. Sunset status and bare operation summaries lower confidence.

@@ -79,6 +79,9 @@ apis:
   - type: Overlay
     url: overlays/cisco-psirt-sunset-endpoints-api-overlay.yaml
 common:
+- type: CapabilityMap
+  url: capabilities/cisco-psirt-capability-edges.yml
+  name: Cisco PSIRT openVuln API Business Capability Map
 - type: AgenticAccess
   url: agentic-access/cisco-psirt-agentic-access.yml
 - type: DomainSecurity
