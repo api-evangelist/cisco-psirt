@@ -1127,33 +1127,6 @@ paths:
                 $ref: '#/components/schemas/errorCode_INVALID_OS_TYPE'
 components:
   schemas:
-    errorCode_INVALID_OS_TYPE:
-      description: Error Code and Message for INVALID_OS_TYPE
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_OS_TYPE
-        errorMessage:
-          type: string
-          example: OS Type is Invalid
-    errorCode_INVALID_PRODUCT_NAME_FORMAT:
-      description: Error Code and Message for INVALID_PRODUCT_NAME_FORMAT
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_PRODUCT_NAME_FORMAT
-        errorMessage:
-          type: string
-          example: Invalid product name format, Special characters are not allowed (&,!,$,',@,#,!,<,?). Valid example's e.g 'cisco' ,'cisco_xe' ,'cisco-xe*' etc
-    errorCode_INVALID_ADV_COUNT:
-      description: Error Code and Message for INVALID_ADV_COUNT
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_ADV_COUNT
-        errorMessage:
-          type: string
-          example: Invalid advisories count
     errorCode_VERSION_ID_IS_MANDATORY:
       description: Error Code and Message for VERSION_ID_IS_MANDATORY
       properties:
@@ -1163,15 +1136,177 @@ components:
         errorMessage:
           type: string
           example: Version ID is mandatory
-    errorCode_INVALID_YEAR:
-      description: Error Code and Message for INVALID_YEAR
+    errorCode_INVALID_PAGEINDEX:
+      description: Error Code and Message for INVALID_PAGEINDEX
       properties:
         errorCode:
           type: string
-          example: INVALID_YEAR
+          example: INVALID_PAGEINDEX
         errorMessage:
           type: string
-          example: Year should be in range 1995 to current year
+          example: Incorrect page index value
+    PlatformData:
+      description: Data Query informs of platform aliases for a given OS.
+      properties:
+        platformAlias:
+          type: string
+          example: MDS9000
+        id:
+          type: integer
+          example: 265086
+        name:
+          type: string
+          example: Cisco MDS 9000 Multilayer Directors and Fabric Switches
+    errorCode_INVALID_OS_TYPE:
+      description: Error Code and Message for INVALID_OS_TYPE
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_OS_TYPE
+        errorMessage:
+          type: string
+          example: OS Type is Invalid
+    OSTypes:
+      description: List of supported Network Operating Systems
+      type: array
+      items:
+        type: string
+        enum:
+        - aci
+        - ios
+        - iosxe
+        - nxos
+        - asa
+        - ftd
+        - fmc
+        - fxos
+    errorCode_INVALID_ADV_COUNT:
+      description: Error Code and Message for INVALID_ADV_COUNT
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_ADV_COUNT
+        errorMessage:
+          type: string
+          example: Invalid advisories count
+    OSData:
+      description: Data Query informs of version and platform information.
+      properties:
+        nos_type:
+          type: string
+          example: NXOS
+        nos_version:
+          type: string
+          example: 7.0(3)F1(1)
+        platform_name:
+          type: string
+          example: Cisco Nexus 9000 Series Switches (Returned for - nxos)
+    errorCode_INVALID_PAGEINDEX_LONG:
+      description: Error Code and Message for INVALID_PAGEINDEX , MIN_PAGESIZE , MAX_PAGESIZE
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_PAGEINDEX , MIN_PAGESIZE , MAX_PAGESIZE
+        errorMessage:
+          type: string
+          example: Incorrect page index value and Minimum page size value = 1 and Maximum page size = 100
+    AdvisoriesErrors:
+      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
+      properties:
+        errorCode:
+          type: string
+          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
+        errorMessage:
+          type: string
+          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
+    errorCode_INVALID_SEVERITY:
+      description: Error Code and Message for INVALID_SEVERITY
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_SEVERITY
+        errorMessage:
+          type: string
+          example: Invalid Severity. Supported severities are critical, high, medium, low and informational
+    errorCode_ADVISORYID_NOT_FOUND:
+      description: Error Code and Message for ADVISORYID_NOT_FOUND
+      properties:
+        errorCode:
+          type: string
+          example: ADVISORYID_NOT_FOUND
+        errorMessage:
+          type: string
+          example: Advisory-id not found
+    errorCode_INVALID_EXTENSION:
+      description: Error Code and Message for INVALID_EXTENSION
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_EXTENSION
+        errorMessage:
+          type: string
+          example: Not supported extension type. Supported extension types are .json and .xml
+    errorCode_START_DATE_GREATER:
+      description: Error Code and Message for START_DATE_GREATER
+      properties:
+        errorCode:
+          type: string
+          example: START_DATE_GREATER
+        errorMessage:
+          type: string
+          example: Start date should not be greater than end date
+    OSTypesPlatforms:
+      description: List of supported Network Operating Systems which support Platforms
+      type: array
+      items:
+        type: string
+        enum:
+        - asa
+        - ftd
+        - fxos
+        - nxos
+    PlatformAliases:
+      description: List of supported Platform Aliases
+      type: array
+      items:
+        type: string
+        enum:
+        - ASA5500
+        - ASA5500X
+        - ASASM
+        - ASAV
+        - FPR1000
+        - FPR2100
+        - FPR4100
+        - FPR9000
+        - FPRNGFW
+        - FWL3100
+        - ISA3000
+        - MDS9000
+        - NEXUS1000V
+        - NEXUS3000
+        - NEXUS5000
+        - NEXUS6000
+        - NEXUS7000
+        - NEXUS9000
+    errorCode_INVALID_DATE_FORMAT:
+      description: Error Code and Message for INVALID_DATE_FORMAT
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_DATE_FORMAT
+        errorMessage:
+          type: string
+          example: Invalid date format, please enter date in yyyy-mm-dd format
+    errorCode_INVALID_PRODUCT_NAME_FORMAT:
+      description: Error Code and Message for INVALID_PRODUCT_NAME_FORMAT
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_PRODUCT_NAME_FORMAT
+        errorMessage:
+          type: string
+          example: Invalid product name format, Special characters are not allowed (&,!,$,',@,#,!,<,?). Valid example's e.g 'cisco' ,'cisco_xe' ,'cisco-xe*' etc
     Advisories:
       description: Successful pull of advisory information
       properties:
@@ -1228,119 +1363,6 @@ components:
         summary:
           type: string
           example: \r\n<p>A vulnerability in the data plane microcode of Lightspeed-Plus line cards for <span class=\"mce-annotation tox-comment\" data-mce-annotation-uid=\"CONV-0005559\" data-mce-annotation=\"tinycomments\">Cisco&nbsp;ASR 9000 Series Aggregation Services Routers</span>,&nbsp;ASR 9902 Compact High-Performance Routers, and ASR 9903 Compact High-Performance Routers could allow an unauthenticated, remote attacker to cause the line card to reset.</p>...
-    errorCode_NO_DATA_FOUND:
-      description: Error Code and Message for NO_DATA_FOUND
-      properties:
-        errorCode:
-          type: string
-          example: NO_DATA_FOUND
-        errorMessage:
-          type: string
-          example: No data found
-    errorCode_ADVISORYID_NOT_FOUND:
-      description: Error Code and Message for ADVISORYID_NOT_FOUND
-      properties:
-        errorCode:
-          type: string
-          example: ADVISORYID_NOT_FOUND
-        errorMessage:
-          type: string
-          example: Advisory-id not found
-    errorCode_INVALID_DATE_FORMAT:
-      description: Error Code and Message for INVALID_DATE_FORMAT
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_DATE_FORMAT
-        errorMessage:
-          type: string
-          example: Invalid date format, please enter date in yyyy-mm-dd format
-    errorCode_NO_DATA_FOUND_CVE:
-      description: Error Code and Message for NO_DATA_FOUND_CVE
-      properties:
-        errorCode:
-          type: string
-          example: NO_DATA_FOUND
-        errorMessage:
-          type: string
-          example: CVE_ID not found
-    errorCode_START_DATE_GREATER:
-      description: Error Code and Message for START_DATE_GREATER
-      properties:
-        errorCode:
-          type: string
-          example: START_DATE_GREATER
-        errorMessage:
-          type: string
-          example: Start date should not be greater than end date
-    PlatformData:
-      description: Data Query informs of platform aliases for a given OS.
-      properties:
-        platformAlias:
-          type: string
-          example: MDS9000
-        id:
-          type: integer
-          example: 265086
-        name:
-          type: string
-          example: Cisco MDS 9000 Multilayer Directors and Fabric Switches
-    errorCode_INVALID_SEVERITY:
-      description: Error Code and Message for INVALID_SEVERITY
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_SEVERITY
-        errorMessage:
-          type: string
-          example: Invalid Severity. Supported severities are critical, high, medium, low and informational
-    PlatformAliases:
-      description: List of supported Platform Aliases
-      type: array
-      items:
-        type: string
-        enum:
-        - ASA5500
-        - ASA5500X
-        - ASASM
-        - ASAV
-        - FPR1000
-        - FPR2100
-        - FPR4100
-        - FPR9000
-        - FPRNGFW
-        - FWL3100
-        - ISA3000
-        - MDS9000
-        - NEXUS1000V
-        - NEXUS3000
-        - NEXUS5000
-        - NEXUS6000
-        - NEXUS7000
-        - NEXUS9000
-    OSTypes:
-      description: List of supported Network Operating Systems
-      type: array
-      items:
-        type: string
-        enum:
-        - aci
-        - ios
-        - iosxe
-        - nxos
-        - asa
-        - ftd
-        - fmc
-        - fxos
-    errorCode_INVALID_PAGEINDEX:
-      description: Error Code and Message for INVALID_PAGEINDEX
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_PAGEINDEX
-        errorMessage:
-          type: string
-          example: Incorrect page index value
     errorCode_START_DATE_AND_END_DATE_MANDATORY:
       description: Error Code and Message for START_DATE_AND_END_DATE_MANDATORY
       properties:
@@ -1350,55 +1372,15 @@ components:
         errorMessage:
           type: string
           example: Start Date and End Date are mandatory
-    OSTypesPlatforms:
-      description: List of supported Network Operating Systems which support Platforms
-      type: array
-      items:
-        type: string
-        enum:
-        - asa
-        - ftd
-        - fxos
-        - nxos
-    OSData:
-      description: Data Query informs of version and platform information.
-      properties:
-        nos_type:
-          type: string
-          example: NXOS
-        nos_version:
-          type: string
-          example: 7.0(3)F1(1)
-        platform_name:
-          type: string
-          example: Cisco Nexus 9000 Series Switches (Returned for - nxos)
-    errorCode_INVALID_PAGEINDEX_LONG:
-      description: Error Code and Message for INVALID_PAGEINDEX , MIN_PAGESIZE , MAX_PAGESIZE
+    errorCode_INVALID_YEAR:
+      description: Error Code and Message for INVALID_YEAR
       properties:
         errorCode:
           type: string
-          example: INVALID_PAGEINDEX , MIN_PAGESIZE , MAX_PAGESIZE
+          example: INVALID_YEAR
         errorMessage:
           type: string
-          example: Incorrect page index value and Minimum page size value = 1 and Maximum page size = 100
-    AdvisoriesErrors:
-      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
-      properties:
-        errorCode:
-          type: string
-          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
-        errorMessage:
-          type: string
-          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
-    errorCode_MIN_PAGESIZE:
-      description: Error Code and Message for MIN_PAGESIZE , MAX_PAGESIZE
-      properties:
-        errorCode:
-          type: string
-          example: MIN_PAGESIZE , MAX_PAGESIZE
-        errorMessage:
-          type: string
-          example: Minimum page size value = 1 and Maximum page size = 100
+          example: Year should be in range 1995 to current year
     errorCode_OS_TYPE_NOT_FOUND:
       description: Error Code and Message for OS_TYPE_NOT_FOUND
       properties:
@@ -1408,6 +1390,33 @@ components:
         errorMessage:
           type: string
           example: OS Type is mandatory
+    errorCode_NO_DATA_FOUND:
+      description: Error Code and Message for NO_DATA_FOUND
+      properties:
+        errorCode:
+          type: string
+          example: NO_DATA_FOUND
+        errorMessage:
+          type: string
+          example: No data found
+    errorCode_NO_DATA_FOUND_CVE:
+      description: Error Code and Message for NO_DATA_FOUND_CVE
+      properties:
+        errorCode:
+          type: string
+          example: NO_DATA_FOUND
+        errorMessage:
+          type: string
+          example: CVE_ID not found
+    errorCode_MIN_PAGESIZE:
+      description: Error Code and Message for MIN_PAGESIZE , MAX_PAGESIZE
+      properties:
+        errorCode:
+          type: string
+          example: MIN_PAGESIZE , MAX_PAGESIZE
+        errorMessage:
+          type: string
+          example: Minimum page size value = 1 and Maximum page size = 100
     errorCode_PRODUCT_NOT_FOUND:
       description: Error Code and Message for PRODUCT_NOT_FOUND
       properties:
@@ -1417,15 +1426,6 @@ components:
         errorMessage:
           type: string
           example: Product not found
-    errorCode_INVALID_EXTENSION:
-      description: Error Code and Message for INVALID_EXTENSION
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_EXTENSION
-        errorMessage:
-          type: string
-          example: Not supported extension type. Supported extension types are .json and .xml
   securitySchemes:
     psirt_openvuln_api_auth:
       type: http

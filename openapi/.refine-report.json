@@ -1,21 +1,20 @@
 {
   "provider": "cisco-psirt",
   "sources": [
-    "cisco-psirt-openvuln-openapi.json"
+    "cisco-psirt-current-endpoints-api-openapi.yml",
+    "cisco-psirt-obsolete-endpoints-api-openapi.yml",
+    "cisco-psirt-sunset-endpoints-api-openapi.yml"
   ],
   "outputs": [
     "cisco-psirt-current-endpoints-api-openapi.yml",
     "cisco-psirt-obsolete-endpoints-api-openapi.yml",
     "cisco-psirt-sunset-endpoints-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/cisco-psirt-openvuln-openapi.json"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
-    "cisco-psirt-openvuln-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "apis.yml register: written (+3 apis, 3 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": []
 }
