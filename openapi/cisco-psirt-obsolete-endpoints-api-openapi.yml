@@ -2,13 +2,7 @@ openapi: 3.2.0
 info:
   version: 2.0.2
   title: Cisco PSIRT openVuln Obsolete Endpoints API
-  description: 'The Cisco Product Security Incident Response Team (PSIRT) openVuln API is a RESTful API that allows customers to obtain Cisco Security Vulnerability information in different machine-consumable formats. APIs are important for customers because they allow their technical staff and programmers to build tools that help them do their job more effectively (in this case, to keep up with security vulnerability information).
-
-    For more information about the Cisco PSIRT openVuln API visit https://developer.cisco.com/psirt/
-
-    For detail steps on how to use the API go to: https://developer.cisco.com/docs/psirt/
-
-    '
+  description: The Cisco Product Security Incident Response Team (PSIRT) openVuln API is a RESTful API that allows customers to obtain Cisco Security Vulnerability information in different machine-consumable formats.
   termsOfService: https://github.com/CiscoPSIRT/openVulnAPI/blob/master/LICENSE.md
   contact:
     name: Cisco PSIRT
@@ -48,7 +42,7 @@ security:
 - psirt_openvuln_api_auth: []
 tags:
 - name: Obsolete Endpoints
-  description: These API endpoints are no longer available.  Migrate to current version calls.
+  description: These API endpoints are no longer available. Migrate to current version calls.
 paths:
   /cvrf/advisory/{advisoryId}:
     get:
@@ -89,6 +83,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/EndofLife'
+      summary: Get cvrf advisory by advisory id
+      x-summary-source: derived
+      operationId: getCvrfAdvisoryByAdvisoryId
+      x-operation-id-source: derived
   /cvrf/all:
     get:
       description: Used to obtain information about all published security advisories.
@@ -143,6 +141,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/EndofLife'
+      summary: Get cvrf all
+      x-summary-source: derived
+      operationId: getCvrfAll
+      x-operation-id-source: derived
   /cvrf/all/firstpublished:
     get:
       description: Used to obtain information about all published security advisories first published within a date timeframe.
@@ -207,6 +209,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/EndofLife'
+      summary: Get cvrf all firstpublished
+      x-summary-source: derived
+      operationId: getCvrfAllFirstpublished
+      x-operation-id-source: derived
   /cvrf/all/lastpublished:
     get:
       description: Used to obtain information about all published security advisories last published within a date timeframe.
@@ -271,6 +277,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/EndofLife'
+      summary: Get cvrf all lastpublished
+      x-summary-source: derived
+      operationId: getCvrfAllLastpublished
+      x-operation-id-source: derived
   /cvrf/cve/{cve_id}:
     get:
       description: Used to obtain an advisory using a given Common Vulnerability Enumerator (CVE). The `cve_id` format is CVE-YYYY-NNNN. For more information about CVE visit http://cve.mitre.org/
@@ -310,6 +320,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/EndofLife'
+      summary: Get cvrf cve by cve id
+      x-summary-source: derived
+      operationId: getCvrfCveByCveId
+      x-operation-id-source: derived
   /cvrf/product:
     get:
       description: Used to obtain all the advisories that affects the given product name.
@@ -365,6 +379,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/EndofLife'
+      summary: Get cvrf product
+      x-summary-source: derived
+      operationId: getCvrfProduct
+      x-operation-id-source: derived
   /cvrf/severity/{severity}:
     get:
       description: Used to obtain all security advisories for a given security impact rating (critical, high, medium, low or informational)
@@ -425,6 +443,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/EndofLife'
+      summary: Get cvrf severity by severity
+      x-summary-source: derived
+      operationId: getCvrfSeverityBySeverity
+      x-operation-id-source: derived
   /cvrf/severity/{severity}/lastpublished:
     get:
       description: Used to obtain all security advisories for a given security impact rating (critical, high, medium, low or informational) and additionally filter based of lastpublished start date and enddate.
@@ -501,6 +523,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/EndofLife'
+      summary: Get cvrf severity by severity lastpublished
+      x-summary-source: derived
+      operationId: getCvrfSeverityBySeverityLastpublished
+      x-operation-id-source: derived
   /cvrf/severity/{severity}/firstpublished:
     get:
       description: Used to obtain all security advisories for a given security impact rating (critical, high, medium, low or informational) and additionally filter based of firstpublished start date and enddate.
@@ -576,6 +602,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/EndofLife'
+      summary: Get cvrf severity by severity firstpublished
+      x-summary-source: derived
+      operationId: getCvrfSeverityBySeverityFirstpublished
+      x-operation-id-source: derived
   /cvrf/year/{year}:
     get:
       description: Used to obtain all security advisories that have were originally published in a specific year `YYYY`.
@@ -631,6 +661,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/EndofLife'
+      summary: Get cvrf year by year
+      x-summary-source: derived
+      operationId: getCvrfYearByYear
+      x-operation-id-source: derived
 components:
   schemas:
     EndofLife:

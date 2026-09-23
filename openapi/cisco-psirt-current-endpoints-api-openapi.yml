@@ -2,13 +2,7 @@ openapi: 3.2.0
 info:
   version: 2.0.2
   title: Cisco PSIRT openVuln Current Endpoints API
-  description: 'The Cisco Product Security Incident Response Team (PSIRT) openVuln API is a RESTful API that allows customers to obtain Cisco Security Vulnerability information in different machine-consumable formats. APIs are important for customers because they allow their technical staff and programmers to build tools that help them do their job more effectively (in this case, to keep up with security vulnerability information).
-
-    For more information about the Cisco PSIRT openVuln API visit https://developer.cisco.com/psirt/
-
-    For detail steps on how to use the API go to: https://developer.cisco.com/docs/psirt/
-
-    '
+  description: The Cisco Product Security Incident Response Team (PSIRT) openVuln API is a RESTful API that allows customers to obtain Cisco Security Vulnerability information in different machine-consumable formats.
   termsOfService: https://github.com/CiscoPSIRT/openVulnAPI/blob/master/LICENSE.md
   contact:
     name: Cisco PSIRT
@@ -108,6 +102,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/errorCode_INVALID_PAGEINDEX'
+      summary: Get all
+      x-summary-source: derived
+      operationId: getAll
+      x-operation-id-source: derived
   /all/firstpublished:
     get:
       description: Used to obtain information about all published security advisories first published within a date timeframe.
@@ -196,6 +194,10 @@ paths:
                 - $ref: '#/components/schemas/errorCode_INVALID_DATE_FORMAT'
                 - $ref: '#/components/schemas/errorCode_START_DATE_GREATER'
                 - $ref: '#/components/schemas/errorCode_START_DATE_AND_END_DATE_MANDATORY'
+      summary: Get all firstpublished
+      x-summary-source: derived
+      operationId: getAllFirstpublished
+      x-operation-id-source: derived
   /all/lastpublished:
     get:
       description: Used to obtain information about all published security advisories last published within a date timeframe.
@@ -284,6 +286,10 @@ paths:
                 - $ref: '#/components/schemas/errorCode_INVALID_DATE_FORMAT'
                 - $ref: '#/components/schemas/errorCode_START_DATE_GREATER'
                 - $ref: '#/components/schemas/errorCode_START_DATE_AND_END_DATE_MANDATORY'
+      summary: Get all lastpublished
+      x-summary-source: derived
+      operationId: getAllLastpublished
+      x-operation-id-source: derived
   /advisory/{advisoryId}:
     get:
       description: Used to obtain an advisory given its advisory ID `advisoryId` (i.e., cisco-sa-20180221-ucdm)
@@ -341,6 +347,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/errorCode_INVALID_EXTENSION'
+      summary: Get advisory by advisory id
+      x-summary-source: derived
+      operationId: getAdvisoryByAdvisoryId
+      x-operation-id-source: derived
   /cve/{cve_id}:
     get:
       description: Used to obtain an advisory using a given Common Vulnerability Enumerator (CVE). The `cve_id` format is CVE-YYYY-NNNN. For more information about CVE visit http://cve.mitre.org/
@@ -388,6 +398,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/errorCode_NO_DATA_FOUND_CVE'
+      summary: Get cve by cve id
+      x-summary-source: derived
+      operationId: getCveByCveId
+      x-operation-id-source: derived
   /bugid/{bug_id}:
     get:
       description: Used to obtain an advisory using a given bug_id . The `bug_id` format is start with CSC.
@@ -435,6 +449,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/errorCode_NO_DATA_FOUND'
+      summary: Get bugid by bug id
+      x-summary-source: derived
+      operationId: getBugidByBugId
+      x-operation-id-source: derived
   /latest/{number}:
     get:
       description: Used to obtain all the latest security advisories given an absolute number. For instance, the latest 10 or latest 5.
@@ -482,6 +500,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/errorCode_INVALID_ADV_COUNT'
+      summary: Get latest by number
+      x-summary-source: derived
+      operationId: getLatestByNumber
+      x-operation-id-source: derived
   /severity/{severity}:
     get:
       description: Used to obtain all security advisories for a given security impact rating (critical, high, medium, low or informational)
@@ -569,6 +591,10 @@ paths:
                 - $ref: '#/components/schemas/errorCode_INVALID_SEVERITY'
                 - $ref: '#/components/schemas/errorCode_START_DATE_GREATER'
                 - $ref: '#/components/schemas/errorCode_START_DATE_AND_END_DATE_MANDATORY'
+      summary: Get severity by severity
+      x-summary-source: derived
+      operationId: getSeverityBySeverity
+      x-operation-id-source: derived
   /severity/{severity}/firstpublished:
     get:
       description: Used to obtain all security advisories for a given security impact rating (critical, high, medium, low or informational) and additionally filter based of firstpublished start date and enddate.
@@ -671,6 +697,10 @@ paths:
                 - $ref: '#/components/schemas/errorCode_INVALID_DATE_FORMAT'
                 - $ref: '#/components/schemas/errorCode_INVALID_SEVERITY'
                 - $ref: '#/components/schemas/errorCode_START_DATE_AND_END_DATE_MANDATORY'
+      summary: Get severity by severity firstpublished
+      x-summary-source: derived
+      operationId: getSeverityBySeverityFirstpublished
+      x-operation-id-source: derived
   /severity/{severity}/lastpublished:
     get:
       description: Used to obtain all security advisories for a given security impact rating (critical, high, medium, low or informational) and additionally filter based of lastpublished start date and enddate.
@@ -774,6 +804,10 @@ paths:
                 - $ref: '#/components/schemas/errorCode_INVALID_DATE_FORMAT'
                 - $ref: '#/components/schemas/errorCode_INVALID_SEVERITY'
                 - $ref: '#/components/schemas/errorCode_START_DATE_AND_END_DATE_MANDATORY'
+      summary: Get severity by severity lastpublished
+      x-summary-source: derived
+      operationId: getSeverityBySeverityLastpublished
+      x-operation-id-source: derived
   /product:
     get:
       description: Used to obtain all the advisories that affects the given product name.
@@ -846,6 +880,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/errorCode_INVALID_PRODUCT_NAME_FORMAT'
+      summary: Get product
+      x-summary-source: derived
+      operationId: getProduct
+      x-operation-id-source: derived
   /year/{year}:
     get:
       description: Used to obtain all security advisories that have were originally published in a specific year `YYYY`.
@@ -918,6 +956,10 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/errorCode_INVALID_YEAR'
+      summary: Get year by year
+      x-summary-source: derived
+      operationId: getYearByYear
+      x-operation-id-source: derived
   /OSType/{OSType}:
     get:
       summary: (Only works with v2 basepath)
@@ -1027,6 +1069,8 @@ paths:
                 - $ref: '#/components/schemas/errorCode_INVALID_DATE_FORMAT'
                 - $ref: '#/components/schemas/errorCode_INVALID_SEVERITY'
                 - $ref: '#/components/schemas/errorCode_START_DATE_AND_END_DATE_MANDATORY'
+      operationId: getOSTypeByOSType
+      x-operation-id-source: derived
   /OS_version/OS_data:
     get:
       summary: (Only works with v2 basepath)
@@ -1072,6 +1116,8 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/errorCode_INVALID_OS_TYPE'
+      operationId: getOSVersionOSData
+      x-operation-id-source: derived
   /platforms:
     get:
       description: To obtain the platform types for the networking operating system.
@@ -1125,70 +1171,39 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/errorCode_INVALID_OS_TYPE'
+      summary: Get platforms
+      x-summary-source: derived
+      operationId: getPlatforms
+      x-operation-id-source: derived
 components:
   schemas:
-    errorCode_VERSION_ID_IS_MANDATORY:
-      description: Error Code and Message for VERSION_ID_IS_MANDATORY
+    errorCode_ADVISORYID_NOT_FOUND:
+      description: Error Code and Message for ADVISORYID_NOT_FOUND
       properties:
         errorCode:
           type: string
-          example: VERSION_ID_IS_MANDATORY
+          example: ADVISORYID_NOT_FOUND
         errorMessage:
           type: string
-          example: Version ID is mandatory
-    errorCode_INVALID_PAGEINDEX:
-      description: Error Code and Message for INVALID_PAGEINDEX
+          example: Advisory-id not found
+    errorCode_INVALID_DATE_FORMAT:
+      description: Error Code and Message for INVALID_DATE_FORMAT
       properties:
         errorCode:
           type: string
-          example: INVALID_PAGEINDEX
+          example: INVALID_DATE_FORMAT
         errorMessage:
           type: string
-          example: Incorrect page index value
-    PlatformData:
-      description: Data Query informs of platform aliases for a given OS.
-      properties:
-        platformAlias:
-          type: string
-          example: MDS9000
-        id:
-          type: integer
-          example: 265086
-        name:
-          type: string
-          example: Cisco MDS 9000 Multilayer Directors and Fabric Switches
-    errorCode_INVALID_OS_TYPE:
-      description: Error Code and Message for INVALID_OS_TYPE
+          example: Invalid date format, please enter date in yyyy-mm-dd format
+    errorCode_START_DATE_AND_END_DATE_MANDATORY:
+      description: Error Code and Message for START_DATE_AND_END_DATE_MANDATORY
       properties:
         errorCode:
           type: string
-          example: INVALID_OS_TYPE
+          example: START_DATE_AND_END_DATE_MANDATORY
         errorMessage:
           type: string
-          example: OS Type is Invalid
-    OSTypes:
-      description: List of supported Network Operating Systems
-      type: array
-      items:
-        type: string
-        enum:
-        - aci
-        - ios
-        - iosxe
-        - nxos
-        - asa
-        - ftd
-        - fmc
-        - fxos
-    errorCode_INVALID_ADV_COUNT:
-      description: Error Code and Message for INVALID_ADV_COUNT
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_ADV_COUNT
-        errorMessage:
-          type: string
-          example: Invalid advisories count
+          example: Start Date and End Date are mandatory
     OSData:
       description: Data Query informs of version and platform information.
       properties:
@@ -1201,42 +1216,6 @@ components:
         platform_name:
           type: string
           example: Cisco Nexus 9000 Series Switches (Returned for - nxos)
-    errorCode_INVALID_PAGEINDEX_LONG:
-      description: Error Code and Message for INVALID_PAGEINDEX , MIN_PAGESIZE , MAX_PAGESIZE
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_PAGEINDEX , MIN_PAGESIZE , MAX_PAGESIZE
-        errorMessage:
-          type: string
-          example: Incorrect page index value and Minimum page size value = 1 and Maximum page size = 100
-    AdvisoriesErrors:
-      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
-      properties:
-        errorCode:
-          type: string
-          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
-        errorMessage:
-          type: string
-          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
-    errorCode_INVALID_SEVERITY:
-      description: Error Code and Message for INVALID_SEVERITY
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_SEVERITY
-        errorMessage:
-          type: string
-          example: Invalid Severity. Supported severities are critical, high, medium, low and informational
-    errorCode_ADVISORYID_NOT_FOUND:
-      description: Error Code and Message for ADVISORYID_NOT_FOUND
-      properties:
-        errorCode:
-          type: string
-          example: ADVISORYID_NOT_FOUND
-        errorMessage:
-          type: string
-          example: Advisory-id not found
     errorCode_INVALID_EXTENSION:
       description: Error Code and Message for INVALID_EXTENSION
       properties:
@@ -1246,25 +1225,6 @@ components:
         errorMessage:
           type: string
           example: Not supported extension type. Supported extension types are .json and .xml
-    errorCode_START_DATE_GREATER:
-      description: Error Code and Message for START_DATE_GREATER
-      properties:
-        errorCode:
-          type: string
-          example: START_DATE_GREATER
-        errorMessage:
-          type: string
-          example: Start date should not be greater than end date
-    OSTypesPlatforms:
-      description: List of supported Network Operating Systems which support Platforms
-      type: array
-      items:
-        type: string
-        enum:
-        - asa
-        - ftd
-        - fxos
-        - nxos
     PlatformAliases:
       description: List of supported Platform Aliases
       type: array
@@ -1289,15 +1249,91 @@ components:
         - NEXUS6000
         - NEXUS7000
         - NEXUS9000
-    errorCode_INVALID_DATE_FORMAT:
-      description: Error Code and Message for INVALID_DATE_FORMAT
+    errorCode_VERSION_ID_IS_MANDATORY:
+      description: Error Code and Message for VERSION_ID_IS_MANDATORY
       properties:
         errorCode:
           type: string
-          example: INVALID_DATE_FORMAT
+          example: VERSION_ID_IS_MANDATORY
         errorMessage:
           type: string
-          example: Invalid date format, please enter date in yyyy-mm-dd format
+          example: Version ID is mandatory
+    errorCode_INVALID_SEVERITY:
+      description: Error Code and Message for INVALID_SEVERITY
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_SEVERITY
+        errorMessage:
+          type: string
+          example: Invalid Severity. Supported severities are critical, high, medium, low and informational
+    errorCode_INVALID_YEAR:
+      description: Error Code and Message for INVALID_YEAR
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_YEAR
+        errorMessage:
+          type: string
+          example: Year should be in range 1995 to current year
+    errorCode_INVALID_PAGEINDEX:
+      description: Error Code and Message for INVALID_PAGEINDEX
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_PAGEINDEX
+        errorMessage:
+          type: string
+          example: Incorrect page index value
+    PlatformData:
+      description: Data Query informs of platform aliases for a given OS.
+      properties:
+        platformAlias:
+          type: string
+          example: MDS9000
+        id:
+          type: integer
+          example: 265086
+        name:
+          type: string
+          example: Cisco MDS 9000 Multilayer Directors and Fabric Switches
+    AdvisoriesErrors:
+      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
+      properties:
+        errorCode:
+          type: string
+          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
+        errorMessage:
+          type: string
+          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
+    OSTypesPlatforms:
+      description: List of supported Network Operating Systems which support Platforms
+      type: array
+      items:
+        type: string
+        enum:
+        - asa
+        - ftd
+        - fxos
+        - nxos
+    errorCode_MIN_PAGESIZE:
+      description: Error Code and Message for MIN_PAGESIZE , MAX_PAGESIZE
+      properties:
+        errorCode:
+          type: string
+          example: MIN_PAGESIZE , MAX_PAGESIZE
+        errorMessage:
+          type: string
+          example: Minimum page size value = 1 and Maximum page size = 100
+    errorCode_NO_DATA_FOUND:
+      description: Error Code and Message for NO_DATA_FOUND
+      properties:
+        errorCode:
+          type: string
+          example: NO_DATA_FOUND
+        errorMessage:
+          type: string
+          example: No data found
     errorCode_INVALID_PRODUCT_NAME_FORMAT:
       description: Error Code and Message for INVALID_PRODUCT_NAME_FORMAT
       properties:
@@ -1307,6 +1343,15 @@ components:
         errorMessage:
           type: string
           example: Invalid product name format, Special characters are not allowed (&,!,$,',@,#,!,<,?). Valid example's e.g 'cisco' ,'cisco_xe' ,'cisco-xe*' etc
+    errorCode_INVALID_ADV_COUNT:
+      description: Error Code and Message for INVALID_ADV_COUNT
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_ADV_COUNT
+        errorMessage:
+          type: string
+          example: Invalid advisories count
     Advisories:
       description: Successful pull of advisory information
       properties:
@@ -1363,24 +1408,6 @@ components:
         summary:
           type: string
           example: \r\n<p>A vulnerability in the data plane microcode of Lightspeed-Plus line cards for <span class=\"mce-annotation tox-comment\" data-mce-annotation-uid=\"CONV-0005559\" data-mce-annotation=\"tinycomments\">Cisco&nbsp;ASR 9000 Series Aggregation Services Routers</span>,&nbsp;ASR 9902 Compact High-Performance Routers, and ASR 9903 Compact High-Performance Routers could allow an unauthenticated, remote attacker to cause the line card to reset.</p>...
-    errorCode_START_DATE_AND_END_DATE_MANDATORY:
-      description: Error Code and Message for START_DATE_AND_END_DATE_MANDATORY
-      properties:
-        errorCode:
-          type: string
-          example: START_DATE_AND_END_DATE_MANDATORY
-        errorMessage:
-          type: string
-          example: Start Date and End Date are mandatory
-    errorCode_INVALID_YEAR:
-      description: Error Code and Message for INVALID_YEAR
-      properties:
-        errorCode:
-          type: string
-          example: INVALID_YEAR
-        errorMessage:
-          type: string
-          example: Year should be in range 1995 to current year
     errorCode_OS_TYPE_NOT_FOUND:
       description: Error Code and Message for OS_TYPE_NOT_FOUND
       properties:
@@ -1390,15 +1417,24 @@ components:
         errorMessage:
           type: string
           example: OS Type is mandatory
-    errorCode_NO_DATA_FOUND:
-      description: Error Code and Message for NO_DATA_FOUND
+    errorCode_START_DATE_GREATER:
+      description: Error Code and Message for START_DATE_GREATER
       properties:
         errorCode:
           type: string
-          example: NO_DATA_FOUND
+          example: START_DATE_GREATER
         errorMessage:
           type: string
-          example: No data found
+          example: Start date should not be greater than end date
+    errorCode_INVALID_PAGEINDEX_LONG:
+      description: Error Code and Message for INVALID_PAGEINDEX , MIN_PAGESIZE , MAX_PAGESIZE
+      properties:
+        errorCode:
+          type: string
+          example: INVALID_PAGEINDEX , MIN_PAGESIZE , MAX_PAGESIZE
+        errorMessage:
+          type: string
+          example: Incorrect page index value and Minimum page size value = 1 and Maximum page size = 100
     errorCode_NO_DATA_FOUND_CVE:
       description: Error Code and Message for NO_DATA_FOUND_CVE
       properties:
@@ -1408,15 +1444,15 @@ components:
         errorMessage:
           type: string
           example: CVE_ID not found
-    errorCode_MIN_PAGESIZE:
-      description: Error Code and Message for MIN_PAGESIZE , MAX_PAGESIZE
+    errorCode_INVALID_OS_TYPE:
+      description: Error Code and Message for INVALID_OS_TYPE
       properties:
         errorCode:
           type: string
-          example: MIN_PAGESIZE , MAX_PAGESIZE
+          example: INVALID_OS_TYPE
         errorMessage:
           type: string
-          example: Minimum page size value = 1 and Maximum page size = 100
+          example: OS Type is Invalid
     errorCode_PRODUCT_NOT_FOUND:
       description: Error Code and Message for PRODUCT_NOT_FOUND
       properties:
@@ -1426,6 +1462,20 @@ components:
         errorMessage:
           type: string
           example: Product not found
+    OSTypes:
+      description: List of supported Network Operating Systems
+      type: array
+      items:
+        type: string
+        enum:
+        - aci
+        - ios
+        - iosxe
+        - nxos
+        - asa
+        - ftd
+        - fmc
+        - fxos
   securitySchemes:
     psirt_openvuln_api_auth:
       type: http

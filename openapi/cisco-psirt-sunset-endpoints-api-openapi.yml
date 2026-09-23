@@ -2,13 +2,7 @@ openapi: 3.2.0
 info:
   version: 2.0.2
   title: Cisco PSIRT openVuln Sunset Endpoints API
-  description: 'The Cisco Product Security Incident Response Team (PSIRT) openVuln API is a RESTful API that allows customers to obtain Cisco Security Vulnerability information in different machine-consumable formats. APIs are important for customers because they allow their technical staff and programmers to build tools that help them do their job more effectively (in this case, to keep up with security vulnerability information).
-
-    For more information about the Cisco PSIRT openVuln API visit https://developer.cisco.com/psirt/
-
-    For detail steps on how to use the API go to: https://developer.cisco.com/docs/psirt/
-
-    '
+  description: The Cisco Product Security Incident Response Team (PSIRT) openVuln API is a RESTful API that allows customers to obtain Cisco Security Vulnerability information in different machine-consumable formats.
   termsOfService: https://github.com/CiscoPSIRT/openVulnAPI/blob/master/LICENSE.md
   contact:
     name: Cisco PSIRT
@@ -48,7 +42,7 @@ security:
 - psirt_openvuln_api_auth: []
 tags:
 - name: Sunset Endpoints
-  description: The "security/advisories" basepath will be deprecated in the future. These API endpoints have changed with the introduction of v2 basepath.  Migrate the below endpoints to current endpoint calls. The below endpoints only work with "security/advisories" basepath.
+  description: The "security/advisories" basepath will be deprecated in the future. These API endpoints have changed with the introduction of v2 basepath. Migrate the below endpoints to current endpoint calls. The below endpoints only work with "security/advisories" basepath.
 paths:
   /ios:
     get:
@@ -115,6 +109,10 @@ paths:
                 oneOf:
                 - $ref: '#/components/schemas/Advisories'
                 - $ref: '#/components/schemas/AdvisoriesErrors'
+      summary: Get ios
+      x-summary-source: derived
+      operationId: getIos
+      x-operation-id-source: derived
   /iosxe:
     get:
       description: Used to obtain all advisories that affects the given ios-xe version.
@@ -180,6 +178,10 @@ paths:
                 oneOf:
                 - $ref: '#/components/schemas/Advisories'
                 - $ref: '#/components/schemas/AdvisoriesErrors'
+      summary: Get iosxe
+      x-summary-source: derived
+      operationId: getIosxe
+      x-operation-id-source: derived
   /aci:
     get:
       description: Used to obtain all advisories that affects the given aci version.
@@ -245,6 +247,10 @@ paths:
                 oneOf:
                 - $ref: '#/components/schemas/Advisories'
                 - $ref: '#/components/schemas/AdvisoriesErrors'
+      summary: Get aci
+      x-summary-source: derived
+      operationId: getAci
+      x-operation-id-source: derived
   /nxos:
     get:
       description: Used to obtain all advisories that affects the given nxos version.
@@ -313,6 +319,10 @@ paths:
                 oneOf:
                 - $ref: '#/components/schemas/Advisories'
                 - $ref: '#/components/schemas/AdvisoriesErrors'
+      summary: Get nxos
+      x-summary-source: derived
+      operationId: getNxos
+      x-operation-id-source: derived
   /nos_version/nos_data:
     get:
       description: To obtain version information regarding the different Network Operating Systems
@@ -339,22 +349,12 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/OSData'
+      summary: Get nos version nos data
+      x-summary-source: derived
+      operationId: getNosVersionNosData
+      x-operation-id-source: derived
 components:
   schemas:
-    OSTypes:
-      description: List of supported Network Operating Systems
-      type: array
-      items:
-        type: string
-        enum:
-        - aci
-        - ios
-        - iosxe
-        - nxos
-        - asa
-        - ftd
-        - fmc
-        - fxos
     OSData:
       description: Data Query informs of version and platform information.
       properties:
@@ -391,15 +391,6 @@ components:
         - NEXUS6000
         - NEXUS7000
         - NEXUS9000
-    AdvisoriesErrors:
-      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
-      properties:
-        errorCode:
-          type: string
-          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
-        errorMessage:
-          type: string
-          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
     Advisories:
       description: Successful pull of advisory information
       properties:
@@ -456,6 +447,29 @@ components:
         summary:
           type: string
           example: \r\n<p>A vulnerability in the data plane microcode of Lightspeed-Plus line cards for <span class=\"mce-annotation tox-comment\" data-mce-annotation-uid=\"CONV-0005559\" data-mce-annotation=\"tinycomments\">Cisco&nbsp;ASR 9000 Series Aggregation Services Routers</span>,&nbsp;ASR 9902 Compact High-Performance Routers, and ASR 9903 Compact High-Performance Routers could allow an unauthenticated, remote attacker to cause the line card to reset.</p>...
+    OSTypes:
+      description: List of supported Network Operating Systems
+      type: array
+      items:
+        type: string
+        enum:
+        - aci
+        - ios
+        - iosxe
+        - nxos
+        - asa
+        - ftd
+        - fmc
+        - fxos
+    AdvisoriesErrors:
+      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
+      properties:
+        errorCode:
+          type: string
+          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
+        errorMessage:
+          type: string
+          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
   securitySchemes:
     psirt_openvuln_api_auth:
       type: http
