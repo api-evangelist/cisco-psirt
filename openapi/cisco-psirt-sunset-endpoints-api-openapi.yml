@@ -355,41 +355,30 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    OSData:
-      description: Data Query informs of version and platform information.
-      properties:
-        nos_type:
-          type: string
-          example: NXOS
-        nos_version:
-          type: string
-          example: 7.0(3)F1(1)
-        platform_name:
-          type: string
-          example: Cisco Nexus 9000 Series Switches (Returned for - nxos)
-    OSTypes:
-      description: List of supported Network Operating Systems
+    PlatformAliases:
+      description: List of supported Platform Aliases
       type: array
       items:
         type: string
         enum:
-        - aci
-        - ios
-        - iosxe
-        - nxos
-        - asa
-        - ftd
-        - fmc
-        - fxos
-    AdvisoriesErrors:
-      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
-      properties:
-        errorCode:
-          type: string
-          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
-        errorMessage:
-          type: string
-          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
+        - ASA5500
+        - ASA5500X
+        - ASASM
+        - ASAV
+        - FPR1000
+        - FPR2100
+        - FPR4100
+        - FPR9000
+        - FPRNGFW
+        - FWL3100
+        - ISA3000
+        - MDS9000
+        - NEXUS1000V
+        - NEXUS3000
+        - NEXUS5000
+        - NEXUS6000
+        - NEXUS7000
+        - NEXUS9000
     Advisories:
       description: Successful pull of advisory information
       properties:
@@ -446,30 +435,41 @@ components:
         summary:
           type: string
           example: \r\n<p>A vulnerability in the data plane microcode of Lightspeed-Plus line cards for <span class=\"mce-annotation tox-comment\" data-mce-annotation-uid=\"CONV-0005559\" data-mce-annotation=\"tinycomments\">Cisco&nbsp;ASR 9000 Series Aggregation Services Routers</span>,&nbsp;ASR 9902 Compact High-Performance Routers, and ASR 9903 Compact High-Performance Routers could allow an unauthenticated, remote attacker to cause the line card to reset.</p>...
-    PlatformAliases:
-      description: List of supported Platform Aliases
+    OSData:
+      description: Data Query informs of version and platform information.
+      properties:
+        nos_type:
+          type: string
+          example: NXOS
+        nos_version:
+          type: string
+          example: 7.0(3)F1(1)
+        platform_name:
+          type: string
+          example: Cisco Nexus 9000 Series Switches (Returned for - nxos)
+    AdvisoriesErrors:
+      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
+      properties:
+        errorCode:
+          type: string
+          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
+        errorMessage:
+          type: string
+          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
+    OSTypes:
+      description: List of supported Network Operating Systems
       type: array
       items:
         type: string
         enum:
-        - ASA5500
-        - ASA5500X
-        - ASASM
-        - ASAV
-        - FPR1000
-        - FPR2100
-        - FPR4100
-        - FPR9000
-        - FPRNGFW
-        - FWL3100
-        - ISA3000
-        - MDS9000
-        - NEXUS1000V
-        - NEXUS3000
-        - NEXUS5000
-        - NEXUS6000
-        - NEXUS7000
-        - NEXUS9000
+        - aci
+        - ios
+        - iosxe
+        - nxos
+        - asa
+        - ftd
+        - fmc
+        - fxos
   securitySchemes:
     psirt_openvuln_api_auth:
       type: http
