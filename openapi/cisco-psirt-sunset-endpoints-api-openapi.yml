@@ -355,6 +355,20 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    OSTypes:
+      description: List of supported Network Operating Systems
+      type: array
+      items:
+        type: string
+        enum:
+        - aci
+        - ios
+        - iosxe
+        - nxos
+        - asa
+        - ftd
+        - fmc
+        - fxos
     PlatformAliases:
       description: List of supported Platform Aliases
       type: array
@@ -379,6 +393,15 @@ components:
         - NEXUS6000
         - NEXUS7000
         - NEXUS9000
+    AdvisoriesErrors:
+      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
+      properties:
+        errorCode:
+          type: string
+          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
+        errorMessage:
+          type: string
+          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
     Advisories:
       description: Successful pull of advisory information
       properties:
@@ -447,29 +470,6 @@ components:
         platform_name:
           type: string
           example: Cisco Nexus 9000 Series Switches (Returned for - nxos)
-    AdvisoriesErrors:
-      description: Data Query informs of data information.  Use endpoint /OS_version/OS_data to retrive valid OS versions.
-      properties:
-        errorCode:
-          type: string
-          example: NO_IOS_AFFECTING_ADVISORIES_FOUND; INVALID_IOS_VERSION
-        errorMessage:
-          type: string
-          example: No Cisco Security Advisories affect the Cisco IOS Software release; IOS version not found
-    OSTypes:
-      description: List of supported Network Operating Systems
-      type: array
-      items:
-        type: string
-        enum:
-        - aci
-        - ios
-        - iosxe
-        - nxos
-        - asa
-        - ftd
-        - fmc
-        - fxos
   securitySchemes:
     psirt_openvuln_api_auth:
       type: http
