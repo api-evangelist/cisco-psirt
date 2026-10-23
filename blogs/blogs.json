@@ -5,18 +5,19 @@
       "source": "https://blogs.cisco.com/tag/psirt",
       "feed_url": "https://blogs.cisco.com/feed",
       "title": "",
-      "saved": 9,
+      "saved": 0,
       "method": "discovered"
     },
     {
-      "source": "https://community.cisco.com/kxiwq67737/rss/Category?category.id=4409j-developer-home&interaction.style=forum",
-      "feed_url": "",
+      "source": "https://blogs.cisco.com/feed",
+      "feed_url": "https://blogs.cisco.com/feed",
+      "title": "",
       "saved": 0,
-      "skipped": "community-shaped; a vendor feed already saved this run (roadmap#239)"
+      "method": "feed"
     }
   ],
-  "post_count": 89,
-  "fetched": "2026-10-10T13:15:00Z",
+  "post_count": 98,
+  "fetched": "2026-10-17T14:53:57Z",
   "feed_nature": "support-community",
   "feed_nature_basis": "khoros_thread",
   "feed_nature_note": "Whether these posts are the vendor publishing or its support community, decided on the URL path grammar of the saved posts -- not the hostname, which carries both on Khoros, and not author diversity, which flags large vendor blogs as forums. 'undetermined' means undetermined.",
